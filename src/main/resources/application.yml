@@ -14,3 +14,5 @@ spring:
         format_sql: false
         use_sql_comments: true
     show-sql: false
+server:
+  port: 80
