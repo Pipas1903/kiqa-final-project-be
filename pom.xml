@@ -73,16 +73,15 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.1</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals><goal>copy-dependencies</goal></goals>
-					</execution>
-				</executions>
+				<groupId>com.heroku.sdk</groupId>
+				<artifactId>heroku-maven-plugin</artifactId>
+				<version>3.0.4</version>
+				<configuration>
+					<appName>kiqa-be</appName>
+					<processTypes>
+						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* com.school.kiqa</web>
+					</processTypes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
