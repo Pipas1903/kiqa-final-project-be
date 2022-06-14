@@ -64,10 +64,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Paginated<ProductDetailsDto> getProductsByBrand(String brand, PageRequest pageRequest) {
-        // TODO: implement method
-        log.warn("the brand {} does not exist", brand);
-        // TODO: implement method
-        log.info("returned all products successfully");
 
         final Page<ProductEntity> products = productRepository.findProductEntitiesByBrandEntityName(brand, pageRequest);
 
@@ -81,6 +77,8 @@ public class ProductServiceImpl implements ProductService {
                 products.getPageable().getPageNumber(),
                 products.getTotalPages(),
                 products.getTotalElements());
+
+        log.info("returned all products successfully");
 
         return paginated;
     }
