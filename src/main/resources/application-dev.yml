@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ec2-54-170-90-26.eu-west-1.compute.amazonaws.com/d3b77j7i1rbil7
+    username: jyonxunbcapxpi
+    password: a17a15d040c5e1caba51e38476693c442192a036c4062490860ae81e41fb4a93
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
