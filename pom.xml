@@ -79,7 +79,7 @@
 				<configuration>
 					<appName>kiqa-be</appName>
 					<processTypes>
-						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* com.school.kiqa</web>
+						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* com.school.kiqa.KiqaApplication</web>
 					</processTypes>
 				</configuration>
 			</plugin>
