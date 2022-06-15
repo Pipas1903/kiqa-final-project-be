@@ -34,4 +34,5 @@ public class ProductController {
         log.info("products fetched");
         return ResponseEntity.ok(products);
     }
+
 }
