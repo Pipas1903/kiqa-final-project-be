@@ -24,8 +24,8 @@ public class ProductController {
     public ResponseEntity<Paginated<ProductDetailsDto>> getPaginatedProducts(
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "20", required = false) int size,
-            @RequestParam(required = false) double maxPrice,
-            @RequestParam(required = false) double minPrice,
+            @RequestParam(defaultValue = "0", required = false) double maxPrice,
+            @RequestParam(defaultValue = "0", required = false) double minPrice,
             @RequestParam(required = false) List<String> category,
             @RequestParam(required = false) List<String> productType,
             @RequestParam(required = false) List<String> brand) {
