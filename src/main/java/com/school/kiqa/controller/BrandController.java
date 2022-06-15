@@ -32,8 +32,8 @@ public class BrandController {
 
     @GetMapping("/brands")
     public ResponseEntity<Paginated<BrandDetailsDto>> getAllBrands(
-            @RequestParam int page,
-            @RequestParam int size
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
         log.info("Received request to get all brands");
         final var response = brandService.getAllBrands(PageRequest.of(page, size));

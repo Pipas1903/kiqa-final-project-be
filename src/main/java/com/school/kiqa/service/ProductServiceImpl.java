@@ -27,8 +27,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductConverter converter;
-    private final ColorRepository colorRepository;
-    private final ColorConverter colorConverter;
 
     @Override
     public Paginated<ProductDetailsDto> getAllProducts(PageRequest pageRequest) {
@@ -112,4 +110,19 @@ public class ProductServiceImpl implements ProductService {
         log.info("product with id {} was successfully deactivated", id);
         return converter.convertEntityToProductDetailsDto(savedItem);
     }
+
+    @Override
+    public ProductDetailsDto activateProduct(Long id) {
+        ProductEntity productEntity = productRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("product with id {} does not exist", id);
+                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
+                });
+
+        productEntity.setIsActive(true);
+        final var savedItem = productRepository.save(productEntity);
+        log.info("product with id {} was successfully activated", id);
+        return converter.convertEntityToProductDetailsDto(savedItem);
+    }
+
 }

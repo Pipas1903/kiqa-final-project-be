@@ -19,4 +19,6 @@ public interface ProductService {
     ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto);
 
     ProductDetailsDto deactivateProduct(Long id);
+
+    ProductDetailsDto activateProduct(Long id);
 }
