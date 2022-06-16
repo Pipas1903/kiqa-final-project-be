@@ -48,9 +48,11 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Paginated<BrandDetailsDto> getAllBrands(PageRequest pageRequest) {
+    public Paginated<BrandDetailsDto> getAllBrands(PageRequest pageRequest, boolean hasProducts) {
 
-        Page<BrandEntity> brandEntities = brandRepository.findAll(pageRequest);
+        Page<BrandEntity> brandEntities = hasProducts ?
+                brandRepository.findDistinctByProductEntityListIsNotNullOrderByNameAsc(pageRequest) :
+                brandRepository.findAll(pageRequest);
 
         final List<BrandDetailsDto> list = brandEntities.stream()
                 .map(converter::convertEntityToBrandDto)
@@ -63,15 +65,8 @@ public class BrandServiceImpl implements BrandService {
                 brandEntities.getTotalPages(),
                 brandEntities.getTotalElements());
 
-        log.info("returned all brands successfully");
+        log.info("received all brands from database successfully");
         return paginated;
-    }
-
-    @Override
-    public List<String> getUsedBrandNames() {
-        List<String> brandNames = brandRepository.findUsedBrands();
-        log.info("returned all brand names successfully");
-        return brandNames;
     }
 
     @Override

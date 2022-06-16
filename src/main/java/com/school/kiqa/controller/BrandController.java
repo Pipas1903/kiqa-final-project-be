@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -35,11 +36,12 @@ public class BrandController {
     @GetMapping("/brands")
     public ResponseEntity<Paginated<BrandDetailsDto>> getAllBrands(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "true", required = false) boolean hasProducts
     ) {
         log.info("Received request to get all brands");
-        final var response = brandService.getAllBrands(PageRequest.of(page, size));
-
+        final var response = brandService.getAllBrands(PageRequest.of(page, size), hasProducts);
+        log.info("Returned all brands successfully");
         return ResponseEntity.ok(response);
     }
 
@@ -47,13 +49,6 @@ public class BrandController {
     public ResponseEntity<BrandDetailsDto> getBrandByName(@PathVariable String name) {
         log.info("Received request to get brand by name {}", name);
         final var response = brandService.getBrandByName(name);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/brands/names")
-    public ResponseEntity<List<String>> getUsedBrandNames() {
-        log.info("Received request to get all used brand names");
-        final var response = brandService.getUsedBrandNames();
         return ResponseEntity.ok(response);
     }
 }

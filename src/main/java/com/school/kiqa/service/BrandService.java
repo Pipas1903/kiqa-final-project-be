@@ -10,9 +10,7 @@ import java.util.List;
 public interface BrandService {
     BrandDetailsDto createBrand(CreateOrUpdateBrandDto brandDto);
 
-    Paginated<BrandDetailsDto> getAllBrands(PageRequest pageRequest);
+    Paginated<BrandDetailsDto> getAllBrands(PageRequest pageRequest, boolean hasProducts);
 
     BrandDetailsDto getBrandByName(String name);
-
-    List<String> getUsedBrandNames();
 }
