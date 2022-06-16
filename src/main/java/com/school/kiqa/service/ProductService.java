@@ -10,11 +10,15 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Paginated<ProductDetailsDto> getAllProducts(PageRequest pageRequest);
+    Paginated<ProductDetailsDto> getAllProducts(PageRequest pageRequest,
+                                                List<String> brands,
+                                                List<String> productTypes,
+                                                List<String> categories,
+                                                double minPrice,
+                                                double maxPrice
+    );
 
     ProductDetailsDto getProductById(Long id);
-
-    Paginated<ProductDetailsDto> getProductsByBrand(String brand, PageRequest pageRequest);
 
     ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto);
 

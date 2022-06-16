@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class Paginated<T> {
     private List<T> paginatedItems;
@@ -19,4 +18,12 @@ public class Paginated<T> {
     private int pageNumber;
     private int totalNumberOfPages;
     private long totalNumberOfProducts;
+
+    public Paginated(List<T> paginatedItems, int itemsPerPage, int pageNumber, int totalNumberOfPages, long totalNumberOfProducts) {
+        this.paginatedItems = paginatedItems;
+        this.itemsPerPage = itemsPerPage;
+        this.pageNumber = pageNumber + 1;
+        this.totalNumberOfPages = totalNumberOfPages;
+        this.totalNumberOfProducts = totalNumberOfProducts;
+    }
 }

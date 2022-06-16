@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -45,6 +47,13 @@ public class BrandController {
     public ResponseEntity<BrandDetailsDto> getBrandByName(@PathVariable String name) {
         log.info("Received request to get brand by name {}", name);
         final var response = brandService.getBrandByName(name);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/brands/names")
+    public ResponseEntity<List<String>> getUsedBrandNames() {
+        log.info("Received request to get all used brand names");
+        final var response = brandService.getUsedBrandNames();
         return ResponseEntity.ok(response);
     }
 }

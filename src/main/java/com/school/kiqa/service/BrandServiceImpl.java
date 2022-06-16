@@ -63,8 +63,15 @@ public class BrandServiceImpl implements BrandService {
                 brandEntities.getTotalPages(),
                 brandEntities.getTotalElements());
 
-        log.info("returned all products successfully");
+        log.info("returned all brands successfully");
         return paginated;
+    }
+
+    @Override
+    public List<String> getUsedBrandNames() {
+        List<String> brandNames = brandRepository.findUsedBrands();
+        log.info("returned all brand names successfully");
+        return brandNames;
     }
 
     @Override
