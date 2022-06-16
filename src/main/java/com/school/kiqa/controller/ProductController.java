@@ -30,20 +30,21 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<Paginated<ProductDetailsDto>> getPaginatedFilteredAndSortedProducts(
             @ParameterObject @PageableDefault(page = 1) Pageable pagination,
-            @RequestParam(required = false, defaultValue = "0") double maxPrice,
             @RequestParam(required = false, defaultValue = "0") double minPrice,
+            @RequestParam(required = false, defaultValue = "0") double maxPrice,
             @RequestParam(required = false) List<String> category,
             @RequestParam(required = false) List<String> subCategory,
             @RequestParam(required = false) List<String> brands
     ) {
         log.info("received request to get all products");
-        final var products = productService.getAllProducts(
-                PageRequest.of(
-                        pagination.getPageNumber() - 1,
-                        pagination.getPageSize(),
-                        pagination.getSort()
-                ),
-                brands, subCategory, category, minPrice, maxPrice);
+        PageRequest pageRequest = PageRequest.of(
+                pagination.getPageNumber() - 1,
+                pagination.getPageSize(),
+                pagination.getSort()
+        );
+
+        final var products = productService
+                .getAllProducts(pageRequest, brands, subCategory, category, minPrice, maxPrice);
         log.info("products fetched");
         return ResponseEntity.ok(products);
     }

@@ -59,12 +59,12 @@ public class ProductServiceImpl implements ProductService {
             double minPrice,
             double maxPrice
     ) {
-        List<Long> brandId = List.of();
-        List<Long> categoryId = List.of();
-        List<Long> productTypeId = List.of();
+        List<Long> brandId = new ArrayList<>();
+        List<Long> categoryId = new ArrayList<>();
+        List<Long> productTypeId = new ArrayList<>();
 
         if (brands != null) {
-            brandId = brands.stream()
+            brandId.addAll(brands.stream()
                     .map(brandName -> brandRepository.findByName(brandName)
                             .orElseThrow(() -> {
                                 log.error(String.format(BRAND_NOT_FOUND_BY_NAME, brandName));
@@ -72,12 +72,12 @@ public class ProductServiceImpl implements ProductService {
                             })
                             .getId()
                     )
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
             log.info("Fetched all brands to filter products");
         }
 
         if (categories != null) {
-            categoryId = categories.stream()
+            categoryId.addAll(categories.stream()
                     .map(categoryName -> categoryRepository.findByName(categoryName)
                             .orElseThrow(() -> {
                                 log.error(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
@@ -85,12 +85,12 @@ public class ProductServiceImpl implements ProductService {
                             })
                             .getId()
                     )
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
             log.info("Fetched all categories to filter products");
         }
 
         if (productTypes != null) {
-            productTypeId = productTypes.stream()
+            productTypeId.addAll(productTypes.stream()
                     .map(productTypeName -> productTypeRepository.findByName(productTypeName)
                             .orElseThrow(() -> {
                                 log.error(String.format(PRODUCT_TYPE_NOT_FOUND_BY_NAME, productTypeName));
@@ -98,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
                             })
                             .getId()
                     )
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
             log.info("Fetched all products to filter products");
         }
 
