@@ -124,5 +124,4 @@ public class ProductServiceImpl implements ProductService {
         log.info("product with id {} was successfully activated", id);
         return converter.convertEntityToProductDetailsDto(savedItem);
     }
-
 }

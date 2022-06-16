@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public class ProductController {
             @RequestParam(required = false) List<String> productType,
             @RequestParam(required = false) List<String> brand,
             @RequestParam(defaultValue = "UNSORTED", required = false) SortOrder alphabeticalOrder,
-            @RequestParam(defaultValue = "UNSORTED", required = false) SortOrder price
+            @RequestParam(defaultValue = "UNSORTED", required = false) SortOrder priceOrder
     ) {
         log.info("received request to get all products");
         final var products = productService.getAllProducts(PageRequest.of(page, size));
