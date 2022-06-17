@@ -26,5 +26,7 @@ public class ProductDetailsDto {
 
     private String categoryName;
 
+    private String subCategoryName;
+
     private List<ColorDto> colors;
 }
