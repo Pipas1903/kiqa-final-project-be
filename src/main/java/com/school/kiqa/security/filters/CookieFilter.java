@@ -37,7 +37,6 @@ public class CookieFilter extends OncePerRequestFilter {
 
         try {
             authCookie.ifPresent(cookie -> {
-
                 SecurityContextHolder.getContext()
                         .setAuthentication(authenticationProvider.validateToken(cookie.getValue()));
                 log.info("Authenticated with cookie");

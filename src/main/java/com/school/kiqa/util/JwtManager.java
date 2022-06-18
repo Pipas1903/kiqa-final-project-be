@@ -30,7 +30,7 @@ public class JwtManager {
                 .withClaim("userType", principal.getRole().toString())
                 .withIssuedAt(Date.from(Instant.now()))
                 .withIssuer("kiqa")
-                .withExpiresAt(Date.from(Instant.now().plus(5L, ChronoUnit.MINUTES)))
+                .withExpiresAt(new Date(new Date().getTime() + properties.getExpiration()))
                 .sign(Algorithm.HMAC256(properties.getSecret()));
     }
 
