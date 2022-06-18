@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ public class BrandController {
     private final BrandService brandService;
 
     @PostMapping("/brands")
+    @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<BrandDetailsDto> createBrand(@RequestBody CreateOrUpdateBrandDto dto) {
         log.info("Received request to create brand");
         final var response = brandService.createBrand(dto);

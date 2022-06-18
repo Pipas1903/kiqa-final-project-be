@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class AuthorizationValidator {
 
     public boolean hasRole(String userRole) {
-        return userRole.equals(getPrincipal().getRole());
+        return userRole.equals(getPrincipal().getRole().toString());
     }
 
     public boolean isUser(Long userId) {

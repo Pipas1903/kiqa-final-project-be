@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +60,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/{id}")
+    @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<ProductDetailsDto> updateProductById(
             @PathVariable Long id,
             @RequestBody CreateOrUpdateProductDto createOrUpdateProductDto
@@ -69,12 +71,14 @@ public class ProductController {
     }
 
     @PatchMapping("/products/{id}/deactivate")
+    @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ProductDetailsDto deactivateProduct(Long id) {
         //TODO: dois endpoints e mandam boolean para 1 só método do service
         return null;
     }
 
     @PatchMapping("/products/{id}/activate")
+    @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ProductDetailsDto activateProduct(Long id) {
         log.info("request received to activate product with id {}", id);
         return null;

@@ -7,13 +7,18 @@ import org.springframework.http.HttpHeaders;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
+@Component
 public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -28,7 +33,6 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
         MAPPER.writeValue(
                 response.getOutputStream(),
                 KiqaError.builder()
-                        .timestamp(new Date())
                         .httpMethod(request.getMethod())
                         .exception(authException.getClass().getSimpleName())
                         .message(authException.getMessage())

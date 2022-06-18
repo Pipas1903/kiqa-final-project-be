@@ -1,5 +1,6 @@
 package com.school.kiqa.command.dto.auth;
 
+import com.school.kiqa.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class PrincipalDto {
-    String role;
-    Long id;
+    private UserType role;
+    private String name;
+    private Long id;
 }
