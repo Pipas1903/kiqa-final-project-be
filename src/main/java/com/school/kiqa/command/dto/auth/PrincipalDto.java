@@ -1,4 +1,4 @@
-package com.school.kiqa.command.dto;
+package com.school.kiqa.command.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BrandDetailsDto {
-    private String name;
-    private String imageLink;
-    private Long id;
+@Builder
+public class PrincipalDto {
+    String role;
+    Long id;
 }

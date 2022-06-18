@@ -1,8 +1,8 @@
 package com.school.kiqa.controller;
 
 import com.school.kiqa.command.Paginated;
-import com.school.kiqa.command.dto.BrandDetailsDto;
-import com.school.kiqa.command.dto.CreateOrUpdateBrandDto;
+import com.school.kiqa.command.dto.brand.BrandDetailsDto;
+import com.school.kiqa.command.dto.brand.CreateOrUpdateBrandDto;
 import com.school.kiqa.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RestController

@@ -1,27 +1,22 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.Paginated;
-import com.school.kiqa.command.dto.CreateOrUpdateProductDto;
-import com.school.kiqa.command.dto.ProductDetailsDto;
-import com.school.kiqa.converter.ColorConverter;
+import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
+import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.converter.ProductConverter;
 import com.school.kiqa.exception.BrandNotFoundException;
 import com.school.kiqa.exception.CategoryNotFoundException;
 import com.school.kiqa.exception.ProductNotFoundException;
 import com.school.kiqa.exception.ProductTypeNotFoundException;
-import com.school.kiqa.persistence.entity.BrandEntity;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import com.school.kiqa.persistence.repository.BrandRepository;
 import com.school.kiqa.persistence.repository.CategoryRepository;
-import com.school.kiqa.persistence.repository.ColorRepository;
 import com.school.kiqa.persistence.repository.ProductRepository;
 import com.school.kiqa.persistence.repository.ProductTypeRepository;
-import com.school.kiqa.persistence.specifications.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 

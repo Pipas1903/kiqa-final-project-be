@@ -1,7 +1,7 @@
 package com.school.kiqa.converter;
 
-import com.school.kiqa.command.dto.CreateOrUpdateProductDto;
-import com.school.kiqa.command.dto.ProductDetailsDto;
+import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
+import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

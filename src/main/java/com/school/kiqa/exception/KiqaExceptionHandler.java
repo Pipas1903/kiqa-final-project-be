@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @ControllerAdvice
 public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
@@ -25,6 +26,8 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(ex.getMessage())
                 .exception(ex.getClass().getSimpleName())
                 .path(req.getRequestURI())
+                .httpMethod(req.getMethod())
+                .timestamp(new Date())
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
@@ -36,6 +39,8 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(ex.getMessage())
                 .exception(ex.getClass().getSimpleName())
                 .path(req.getRequestURI())
+                .httpMethod(req.getMethod())
+                .timestamp(new Date())
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);

@@ -1,7 +1,7 @@
 package com.school.kiqa.controller;
 
-import com.school.kiqa.command.dto.CategoryDetailsDto;
-import com.school.kiqa.command.dto.CreateOrUpdateCategoryDto;
+import com.school.kiqa.command.dto.category.CategoryDetailsDto;
+import com.school.kiqa.command.dto.category.CreateOrUpdateCategoryDto;
 import com.school.kiqa.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
