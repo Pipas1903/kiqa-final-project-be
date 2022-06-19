@@ -3,15 +3,14 @@ package com.school.kiqa.controller;
 import com.school.kiqa.command.Paginated;
 import com.school.kiqa.command.dto.CreateOrUpdateProductDto;
 import com.school.kiqa.command.dto.ProductDetailsDto;
-import com.school.kiqa.exception.ProductNotFoundException;
-import com.school.kiqa.persistence.entity.ProductEntity;
 import com.school.kiqa.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.*;
 import java.util.List;
-
-import static com.school.kiqa.exception.ErrorMessageConstants.PRODUCT_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -32,19 +28,24 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/products")
-    public ResponseEntity<Paginated<ProductDetailsDto>> getPaginatedAndFilteredProducts(
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "10", required = false) int size,
-            @RequestParam(defaultValue = "0", required = false) double maxPrice,
-            @RequestParam(defaultValue = "0", required = false) double minPrice,
+    public ResponseEntity<Paginated<ProductDetailsDto>> getPaginatedFilteredAndSortedProducts(
+            @ParameterObject @PageableDefault(page = 1) Pageable pagination,
+            @RequestParam(required = false, defaultValue = "0") double minPrice,
+            @RequestParam(required = false, defaultValue = "0") double maxPrice,
             @RequestParam(required = false) List<String> category,
-            @RequestParam(required = false) List<String> productType,
-            @RequestParam(required = false) List<String> brand,
-            @RequestParam(defaultValue = "UNSORTED", required = false) SortOrder alphabeticalOrder,
-            @RequestParam(defaultValue = "UNSORTED", required = false) SortOrder priceOrder
+            @RequestParam(required = false) List<String> subCategory,
+            @RequestParam(required = false) List<String> brands
     ) {
         log.info("received request to get all products");
-        final var products = productService.getAllProducts(PageRequest.of(page, size));
+        PageRequest pageRequest = PageRequest.of(
+                pagination.getPageNumber() - 1,
+                pagination.getPageSize(),
+                //TODO: verify type of sort
+                pagination.getSort()
+        );
+
+        final var products = productService
+                .getAllProducts(pageRequest, brands, subCategory, category, minPrice, maxPrice);
         log.info("products fetched");
         return ResponseEntity.ok(products);
     }
@@ -69,12 +70,13 @@ public class ProductController {
 
     @PatchMapping("/products/{id}/deactivate")
     public ProductDetailsDto deactivateProduct(Long id) {
-        //TODO: dois endpoints e mandam boolean
+        //TODO: dois endpoints e mandam boolean para 1 só método do service
         return null;
     }
 
     @PatchMapping("/products/{id}/activate")
     public ProductDetailsDto activateProduct(Long id) {
+        log.info("request received to activate product with id {}", id);
         return null;
     }
 
