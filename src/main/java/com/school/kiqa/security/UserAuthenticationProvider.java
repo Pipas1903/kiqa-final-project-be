@@ -7,13 +7,11 @@ import com.school.kiqa.persistence.repository.UserRepository;
 import com.school.kiqa.util.JwtManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.security.Principal;
 import java.util.Collections;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
