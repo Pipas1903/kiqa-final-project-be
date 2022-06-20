@@ -3,8 +3,6 @@ package com.school.kiqa.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.impl.JWTParser;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.school.kiqa.command.dto.auth.PrincipalDto;
 import com.school.kiqa.properties.JwtProperties;
@@ -13,13 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtManager {
+public class JwtServiceImpl implements JwtService {
 
     private final JwtProperties properties;
 
@@ -43,7 +40,7 @@ public class JwtManager {
                 .build();
 
         DecodedJWT decodedJWT = verifier.verify(token);
-        System.out.println("Verify JWT token success.");
+        log.info("Verify JWT token success.");
 
         Long userId = decodedJWT.getClaim("id").asLong();
         log.info("Decoded token for user with id {}", userId);

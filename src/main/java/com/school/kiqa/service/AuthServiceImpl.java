@@ -6,7 +6,7 @@ import com.school.kiqa.command.dto.auth.PrincipalDto;
 import com.school.kiqa.exception.WrongCredentialsException;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.UserRepository;
-import com.school.kiqa.util.JwtManager;
+import com.school.kiqa.util.JwtServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +19,7 @@ import static com.school.kiqa.exception.ErrorMessageConstants.WRONG_CREDENTIALS;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final JwtManager jwt;
+    private final JwtServiceImpl jwt;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
