@@ -1,4 +1,4 @@
-package com.school.kiqa.command.dto;
+package com.school.kiqa.command.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateOrUpdateCategoryDto {
-    private String name;
+public class UpdateUserDto {
+    private String wtf;
 }

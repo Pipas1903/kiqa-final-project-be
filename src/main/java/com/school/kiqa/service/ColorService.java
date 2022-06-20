@@ -1,6 +1,6 @@
 package com.school.kiqa.service;
 
-import com.school.kiqa.command.dto.ColorDto;
+import com.school.kiqa.command.dto.color.ColorDto;
 
 import java.util.List;
 

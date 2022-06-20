@@ -1,4 +1,4 @@
-package com.school.kiqa.command.dto;
+package com.school.kiqa.command.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ColorDto {
-    private String hexValue;
-    private String colourName;
+public class OrderDetailsDto {
+    private String wtf;
+
 }

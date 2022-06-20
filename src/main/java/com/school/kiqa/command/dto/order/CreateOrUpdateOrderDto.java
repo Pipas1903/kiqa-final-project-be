@@ -1,4 +1,4 @@
-package com.school.kiqa.command.dto;
+package com.school.kiqa.command.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,12 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrUpdateBrandDto {
-    private String name;
-    private String imageLink;
+@Builder
+public class CreateOrUpdateOrderDto {
+    private String wtf;
 }

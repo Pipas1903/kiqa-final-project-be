@@ -1,8 +1,8 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.Paginated;
-import com.school.kiqa.command.dto.BrandDetailsDto;
-import com.school.kiqa.command.dto.CreateOrUpdateBrandDto;
+import com.school.kiqa.command.dto.brand.BrandDetailsDto;
+import com.school.kiqa.command.dto.brand.CreateOrUpdateBrandDto;
 import com.school.kiqa.converter.BrandConverter;
 import com.school.kiqa.exception.AlreadyExistsException;
 import com.school.kiqa.exception.BrandNotFoundException;

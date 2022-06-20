@@ -1,7 +1,7 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.converter.ColorConverter;
-import com.school.kiqa.command.dto.ColorDto;
+import com.school.kiqa.command.dto.color.ColorDto;
 import com.school.kiqa.persistence.entity.ColorEntity;
 import com.school.kiqa.persistence.repository.ColorRepository;
 import lombok.RequiredArgsConstructor;

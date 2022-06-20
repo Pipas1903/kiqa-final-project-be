@@ -1,5 +1,6 @@
-package com.school.kiqa.command.dto;
+package com.school.kiqa.command.dto.product;
 
+import com.school.kiqa.command.dto.color.ColorDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

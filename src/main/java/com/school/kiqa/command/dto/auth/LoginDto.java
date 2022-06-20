@@ -1,4 +1,4 @@
-package com.school.kiqa.command.dto;
+package com.school.kiqa.command.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
+@Builder
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class CategoryDetailsDto {
-    private Long id;
-    private String name;
+public class LoginDto {
+    private PrincipalDto principalDto;
+    private String token;
 }

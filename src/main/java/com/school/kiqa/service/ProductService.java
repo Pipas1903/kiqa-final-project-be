@@ -1,12 +1,11 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.Paginated;
-import com.school.kiqa.command.dto.CreateOrUpdateProductDto;
-import com.school.kiqa.command.dto.ProductDetailsDto;
+import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
+import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
 
