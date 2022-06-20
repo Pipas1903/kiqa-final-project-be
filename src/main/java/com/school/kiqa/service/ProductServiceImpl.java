@@ -151,32 +151,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDetailsDto deactivateProduct(Long id) {
+    public ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activeProduct) {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("product with id {} does not exist", id);
                     return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
                 });
 
+        return activeProduct ? activateProduct(productEntity, id) : deactivateProduct(productEntity, id);
+
+    }
+
+    @Override
+    public ProductDetailsDto activateProduct(ProductEntity productEntity, Long id) {
+        productEntity.setIsActive(true);
+        final var savedItem = productRepository.save(productEntity);
+        log.info("product with id {} was successfully activated", id);
+        return converter.convertEntityToProductDetailsDto(savedItem);
+    }
+
+    @Override
+    public ProductDetailsDto deactivateProduct(ProductEntity productEntity, Long id) {
         productEntity.setIsActive(false);
         final var savedItem = productRepository.save(productEntity);
         log.info("product with id {} was successfully deactivated", id);
         return converter.convertEntityToProductDetailsDto(savedItem);
     }
 
-    @Override
-    public ProductDetailsDto activateProduct(Long id) {
-        ProductEntity productEntity = productRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("product with id {} does not exist", id);
-                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
-                });
-
-        productEntity.setIsActive(true);
-        final var savedItem = productRepository.save(productEntity);
-        log.info("product with id {} was successfully activated", id);
-        return converter.convertEntityToProductDetailsDto(savedItem);
-    }
 
     @Override
     public List<ProductDetailsDto> relatedProducts(Long productId) {

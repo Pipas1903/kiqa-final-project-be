@@ -22,9 +22,13 @@ public interface ProductService {
 
     ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto);
 
-    ProductDetailsDto deactivateProduct(Long id);
+     ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activeProduct);
 
-    ProductDetailsDto activateProduct(Long id);
+    ProductDetailsDto activateProduct(ProductEntity productEntity, Long id);
+
+    ProductDetailsDto deactivateProduct(ProductEntity productEntity, Long id);
+
+
 
     List<ProductDetailsDto> relatedProducts(Long productId);
 }
