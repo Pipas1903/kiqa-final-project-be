@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UserDetailsDto {
+    private Long id;
     private String name;
     private String email;
     private LocalDate dateOfBirth;

@@ -4,16 +4,14 @@ import com.school.kiqa.command.dto.auth.PrincipalDto;
 import com.school.kiqa.exception.UserNotFoundException;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.UserRepository;
-import com.school.kiqa.util.JwtManager;
+import com.school.kiqa.util.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.security.Principal;
 import java.util.Collections;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
@@ -24,10 +22,10 @@ import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
 public class UserAuthenticationProvider {
 
     private final UserRepository userRepository;
-    private final JwtManager jwtManager;
+    private final JwtService jwtService;
 
     public Authentication validateToken(String token) {
-        Long userId = jwtManager.validateTokenAndGetId(token);
+        Long userId = jwtService.validateTokenAndGetId(token);
 
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> {
