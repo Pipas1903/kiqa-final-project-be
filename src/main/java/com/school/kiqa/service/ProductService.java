@@ -21,6 +21,8 @@ public interface ProductService {
 
     ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto);
 
+    List<ProductDetailsDto> searchProductsByName(String name);
+
     ProductDetailsDto deactivateProduct(Long id);
 
     ProductDetailsDto activateProduct(Long id);

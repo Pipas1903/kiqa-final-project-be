@@ -84,4 +84,11 @@ public class ProductController {
         return null;
     }
 
+    @GetMapping("/products/search")
+    public ResponseEntity<List<ProductDetailsDto>> searchProductByName(@RequestParam(required = true) String name) {
+        final var products = productService.searchProductsByName(name);
+        log.info("Returning products that have '{}' in the name", name);
+        return ResponseEntity.ok(products);
+    }
+
 }

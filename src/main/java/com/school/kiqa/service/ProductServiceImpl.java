@@ -153,6 +153,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDetailsDto> searchProductsByName(String name) {
+
+        List<ProductEntity> products = productRepository.searchAllByNameContainingIgnoreCase(name);
+        log.info("Retrieved {} results from search by name '{}'", products.size(), name);
+        return products.stream().map(converter::convertEntityToProductDetailsDto).collect(Collectors.toList());
+    }
+
+    @Override
     public ProductDetailsDto deactivateProduct(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> {
