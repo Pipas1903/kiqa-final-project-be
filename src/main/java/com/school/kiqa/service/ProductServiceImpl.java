@@ -159,7 +159,6 @@ public class ProductServiceImpl implements ProductService {
                 });
 
         return activeProduct ? activateProduct(productEntity, id) : deactivateProduct(productEntity, id);
-
     }
 
     @Override

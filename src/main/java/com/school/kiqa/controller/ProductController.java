@@ -72,16 +72,16 @@ public class ProductController {
 
     @PatchMapping("/products/{id}/deactivate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
-    public ProductDetailsDto deactivateProduct(Long id) {
-        //TODO: dois endpoints e mandam boolean para 1 só método do service
-        return null;
+    public ResponseEntity<ProductDetailsDto> deactivateProduct(Long id, boolean activeProduct) {
+        log.info("request received to deactivate product with id {}", id);
+        return ResponseEntity.ok(productService.activateOrDeactivateProduct(id, activeProduct));
     }
 
     @PatchMapping("/products/{id}/activate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
-    public ProductDetailsDto activateProduct(Long id) {
+    public ResponseEntity<ProductDetailsDto> activateProduct(Long id, boolean activeProduct) {
         log.info("request received to activate product with id {}", id);
-        return null;
+        return ResponseEntity.ok(productService.activateOrDeactivateProduct(id, activeProduct));
     }
 
 }
