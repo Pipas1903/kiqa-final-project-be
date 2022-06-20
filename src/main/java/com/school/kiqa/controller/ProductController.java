@@ -59,6 +59,15 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    @GetMapping("/products/related")
+    public ResponseEntity<List<ProductDetailsDto>> getRelatedProducts(
+            @RequestParam(required = false, defaultValue = "lips") String categoryName) {
+        log.info("received request to get products related by category {}", categoryName);
+        final var products = productService.getRelatedProducts(categoryName);
+        log.info("products related to {} fetched", categoryName);
+        return ResponseEntity.ok(products);
+    }
+
     @PutMapping("/products/{id}")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<ProductDetailsDto> updateProductById(
@@ -85,8 +94,13 @@ public class ProductController {
     }
 
     @GetMapping("/products/search")
-    public ResponseEntity<List<ProductDetailsDto>> searchProductByName(@RequestParam(required = true) String name) {
-        final var products = productService.searchProductsByName(name);
+    public ResponseEntity<Paginated<ProductDetailsDto>> searchProductByName(
+            @RequestParam String name,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        final var products = productService.searchProductsByName(name, pageRequest);
         log.info("Returning products that have '{}' in the name", name);
         return ResponseEntity.ok(products);
     }
