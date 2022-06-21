@@ -1,11 +1,11 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.Paginated;
-import com.school.kiqa.command.dto.BrandDetailsDto;
-import com.school.kiqa.command.dto.CreateOrUpdateBrandDto;
+import com.school.kiqa.command.dto.brand.BrandDetailsDto;
+import com.school.kiqa.command.dto.brand.CreateOrUpdateBrandDto;
 import com.school.kiqa.converter.BrandConverter;
-import com.school.kiqa.exception.AlreadyExistsException;
-import com.school.kiqa.exception.BrandNotFoundException;
+import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
+import com.school.kiqa.exception.notFound.BrandNotFoundException;
 import com.school.kiqa.exception.ErrorMessageConstants;
 import com.school.kiqa.persistence.entity.BrandEntity;
 import com.school.kiqa.persistence.repository.BrandRepository;
@@ -48,13 +48,16 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Paginated<BrandDetailsDto> getAllBrands(PageRequest pageRequest) {
+    public Paginated<BrandDetailsDto> getAllBrands(PageRequest pageRequest, boolean hasProducts) {
 
-        Page<BrandEntity> brandEntities = brandRepository.findAll(pageRequest);
+        Page<BrandEntity> brandEntities = hasProducts ?
+                brandRepository.findDistinctByProductEntityListIsNotNullOrderByNameAsc(pageRequest) :
+                brandRepository.findAll(pageRequest);
 
         final List<BrandDetailsDto> list = brandEntities.stream()
                 .map(converter::convertEntityToBrandDto)
                 .collect(Collectors.toList());
+
 
         Paginated<BrandDetailsDto> paginated = new Paginated<>(
                 list,
@@ -63,7 +66,7 @@ public class BrandServiceImpl implements BrandService {
                 brandEntities.getTotalPages(),
                 brandEntities.getTotalElements());
 
-        log.info("returned all products successfully");
+        log.info("received all brands from database successfully");
         return paginated;
     }
 

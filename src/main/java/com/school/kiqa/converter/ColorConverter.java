@@ -1,6 +1,6 @@
 package com.school.kiqa.converter;
 
-import com.school.kiqa.command.dto.ColorDto;
+import com.school.kiqa.command.dto.color.ColorDto;
 import com.school.kiqa.persistence.entity.ColorEntity;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,10 @@
 package com.school.kiqa.adapter;
 
-import com.school.kiqa.command.dto.ColorDto;
-import com.school.kiqa.exception.BrandNotFoundException;
-import com.school.kiqa.exception.CategoryNotFoundException;
-import com.school.kiqa.exception.ColorNotFoundException;
-import com.school.kiqa.exception.ProductTypeNotFoundException;
+import com.school.kiqa.command.dto.color.ColorDto;
+import com.school.kiqa.exception.notFound.BrandNotFoundException;
+import com.school.kiqa.exception.notFound.CategoryNotFoundException;
+import com.school.kiqa.exception.notFound.ColorNotFoundException;
+import com.school.kiqa.exception.notFound.ProductTypeNotFoundException;
 import com.school.kiqa.persistence.entity.BrandEntity;
 import com.school.kiqa.persistence.entity.CategoryEntity;
 import com.school.kiqa.persistence.entity.ColorEntity;
@@ -19,7 +19,6 @@ import com.school.kiqa.service.ColorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.BRAND_NOT_FOUND_BY_NAME;

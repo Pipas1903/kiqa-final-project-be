@@ -1,7 +1,7 @@
 package com.school.kiqa.converter;
 
-import com.school.kiqa.command.dto.BrandDetailsDto;
-import com.school.kiqa.command.dto.CreateOrUpdateBrandDto;
+import com.school.kiqa.command.dto.brand.BrandDetailsDto;
+import com.school.kiqa.command.dto.brand.CreateOrUpdateBrandDto;
 import com.school.kiqa.persistence.entity.BrandEntity;
 import org.springframework.stereotype.Component;
 

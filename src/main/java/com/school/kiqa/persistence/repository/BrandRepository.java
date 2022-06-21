@@ -1,6 +1,8 @@
 package com.school.kiqa.persistence.repository;
 
 import com.school.kiqa.persistence.entity.BrandEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +12,7 @@ import java.util.Optional;
 public interface BrandRepository extends JpaRepository<BrandEntity, Long> {
 
     Optional<BrandEntity> findByName(String name);
+    Page<BrandEntity> findDistinctByProductEntityListIsNotNullOrderByNameAsc(Pageable pageRequest);
+
+
 }

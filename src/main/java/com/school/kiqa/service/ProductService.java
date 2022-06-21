@@ -1,22 +1,31 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.Paginated;
-import com.school.kiqa.command.dto.CreateOrUpdateProductDto;
-import com.school.kiqa.command.dto.ProductDetailsDto;
+import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
+import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
 
-    Paginated<ProductDetailsDto> getAllProducts(PageRequest pageRequest);
+    Paginated<ProductDetailsDto> getAllProducts(PageRequest pageRequest,
+                                                List<String> brands,
+                                                List<String> productTypes,
+                                                List<String> categories,
+                                                double minPrice,
+                                                double maxPrice
+    );
 
     ProductDetailsDto getProductById(Long id);
 
-    Paginated<ProductDetailsDto> getProductsByBrand(String brand, PageRequest pageRequest);
-
     ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto);
 
+    Paginated<ProductDetailsDto> searchProductsByName(String name, PageRequest pageRequest);
+
     ProductDetailsDto deactivateProduct(Long id);
+
+    ProductDetailsDto activateProduct(Long id);
+
+    List<ProductDetailsDto> getRelatedProducts(String categoryName);
 }

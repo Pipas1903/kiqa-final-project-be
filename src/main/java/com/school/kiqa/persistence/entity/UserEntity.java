@@ -1,6 +1,6 @@
 package com.school.kiqa.persistence.entity;
 
-import com.school.kiqa.enumerators.UserType;
+import com.school.kiqa.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,7 +38,7 @@ public class UserEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)

@@ -1,7 +1,7 @@
 package com.school.kiqa.converter;
 
-import com.school.kiqa.command.dto.CategoryDetailsDto;
-import com.school.kiqa.command.dto.CreateOrUpdateCategoryDto;
+import com.school.kiqa.command.dto.category.CategoryDetailsDto;
+import com.school.kiqa.command.dto.category.CreateOrUpdateCategoryDto;
 import com.school.kiqa.persistence.entity.CategoryEntity;
 import org.springframework.stereotype.Component;
 
