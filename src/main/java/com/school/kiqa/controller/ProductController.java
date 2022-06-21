@@ -41,7 +41,6 @@ public class ProductController {
         PageRequest pageRequest = PageRequest.of(
                 pagination.getPageNumber() - 1,
                 pagination.getPageSize(),
-                //TODO: verify type of sort
                 pagination.getSort()
         );
 

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.BRAND_NOT_FOUND_BY_NAME;
@@ -46,6 +47,7 @@ public class MigrationAdapter implements ProductApi {
     private final ProductTypeRepository productTypeRepository;
 
     @Async
+    @Override
     public void migrateApiToKiqaApi() {
 
         final var productList = getProductsFromExternalApi();
@@ -169,5 +171,34 @@ public class MigrationAdapter implements ProductApi {
 
         return Arrays.stream(Objects.requireNonNull(response.getBody()))
                 .collect(Collectors.toList());
+    }
+
+    @Async
+    @Override
+    public void updateProductImage() {
+        final var products = getProductsFromExternalApi();
+
+        products.forEach(productFromApi -> {
+            if (!productFromApi.getApi_featured_image().startsWith("https:")) {
+                productFromApi.setApi_featured_image("https:" + productFromApi.getApi_featured_image());
+                log.warn("Update api image to have 'https:' before image link");
+            }
+
+            Optional<ProductEntity> product = productRepository.findByName(productFromApi.getName());
+
+            if (product.isEmpty()) {
+                log.warn("Product with name {} not found", productFromApi.getName());
+                return;
+            }
+
+            log.warn("Found product by name '{}' and with id {}", product.get().getName(), product.get().getId());
+
+            product.get().setImage(productFromApi.getApi_featured_image());
+            log.info("product image updated");
+
+            productRepository.save(product.get());
+            log.info("saved updated product to database");
+        });
+        log.info("Finished setting images");
     }
 }

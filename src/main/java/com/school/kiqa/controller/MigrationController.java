@@ -23,4 +23,12 @@ public class MigrationController {
         migrationAdapter.migrateApiToKiqaApi();
         return ResponseEntity.ok("Processing started");
     }
+
+    @GetMapping("/make-api-update-kiqa-product")
+    @PreAuthorize("@authorized.hasRole('ADMIN')")
+    public ResponseEntity<String> updateProductImage() {
+        log.info("Received request to update products from kiqa with MUA featured api image");
+        migrationAdapter.updateProductImage();
+        return ResponseEntity.ok("Processing started");
+    }
 }

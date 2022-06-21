@@ -7,7 +7,7 @@ public class ProductApiConverter {
         return ProductEntity.builder()
                 .price(product.getPrice())
                 .description(product.getDescription())
-                .image(product.getImage_link())
+                .image(product.getApi_featured_image())
                 .isActive(true)
                 .name(product.getName())
                 .build();
