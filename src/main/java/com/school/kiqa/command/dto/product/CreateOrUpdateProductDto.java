@@ -12,20 +12,12 @@ import java.util.List;
 public class CreateOrUpdateProductDto {
 
     private Double price;
-
     private String description;
-
     private String brand;
-
     private String name;
-
     private Boolean isActive;
-
     private String image;
-
     private String categoryName;
-
-    private String subCategoryName;
-
+    private String productTypeName;
     private List<ColorDto> colors;
 }

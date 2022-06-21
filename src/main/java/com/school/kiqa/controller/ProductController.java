@@ -74,14 +74,17 @@ public class ProductController {
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<ProductDetailsDto> deactivateProduct(Long id, boolean activeProduct) {
         log.info("request received to deactivate product with id {}", id);
-        return ResponseEntity.ok(productService.activateOrDeactivateProduct(id, activeProduct));
+        final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
+        log.info("deactivated product with id {} successfully", id);
+        return ResponseEntity.ok(changedProduct);
     }
 
     @PatchMapping("/products/{id}/activate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<ProductDetailsDto> activateProduct(Long id, boolean activeProduct) {
         log.info("request received to activate product with id {}", id);
-        return ResponseEntity.ok(productService.activateOrDeactivateProduct(id, activeProduct));
+        final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
+        log.info("activated product with id {} successfully", id);
+        return ResponseEntity.ok(changedProduct);
     }
-
 }

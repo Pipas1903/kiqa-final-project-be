@@ -4,7 +4,10 @@ import com.school.kiqa.command.Paginated;
 import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
 import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.converter.ProductConverter;
-import com.school.kiqa.exception.*;
+import com.school.kiqa.exception.BrandNotFoundException;
+import com.school.kiqa.exception.CategoryNotFoundException;
+import com.school.kiqa.exception.ProductNotFoundException;
+import com.school.kiqa.exception.ProductTypeNotFoundException;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import com.school.kiqa.persistence.repository.BrandRepository;
 import com.school.kiqa.persistence.repository.CategoryRepository;
@@ -19,18 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.school.kiqa.exception.ErrorMessageConstants.BRAND_NOT_FOUND_BY_NAME;
-import static com.school.kiqa.exception.ErrorMessageConstants.CATEGORY_NOT_FOUND_BY_NAME;
-import static com.school.kiqa.exception.ErrorMessageConstants.PRODUCT_NOT_FOUND;
-import static com.school.kiqa.exception.ErrorMessageConstants.PRODUCT_TYPE_NOT_FOUND_BY_NAME;
-import static com.school.kiqa.persistence.specifications.ProductSpecifications.endingAtPrice;
-import static com.school.kiqa.persistence.specifications.ProductSpecifications.startingAtPrice;
-import static com.school.kiqa.persistence.specifications.ProductSpecifications.withBrand;
-import static com.school.kiqa.persistence.specifications.ProductSpecifications.withCategory;
-import static com.school.kiqa.persistence.specifications.ProductSpecifications.withProductType;
+import static com.school.kiqa.exception.ErrorMessageConstants.*;
+import static com.school.kiqa.persistence.specifications.ProductSpecifications.*;
 
 @Service
 @Slf4j
@@ -151,14 +146,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activeProduct) {
+    public ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activateProduct) {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("product with id {} does not exist", id);
+                    log.warn(String.format(PRODUCT_NOT_FOUND, id));
                     return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
                 });
 
-        return activeProduct ? activateProduct(productEntity, id) : deactivateProduct(productEntity, id);
+        return activateProduct ? activateProduct(productEntity, id) : deactivateProduct(productEntity, id);
     }
 
     @Override
@@ -175,23 +170,6 @@ public class ProductServiceImpl implements ProductService {
         final var savedItem = productRepository.save(productEntity);
         log.info("product with id {} was successfully deactivated", id);
         return converter.convertEntityToProductDetailsDto(savedItem);
-    }
-
-
-    @Override
-    public List<ProductDetailsDto> relatedProducts(Long productId) {
-
-        Optional<ProductEntity> productEntityOptional = productRepository.findById(productId);
-
-        if (productEntityOptional.isPresent()) {
-            return productRepository.findAll()
-                    .stream()
-                    .filter(productEntity -> productEntity.getCategoryEntity().getName().equals(productEntityOptional.get().getCategoryEntity().getName()))
-                    .limit(10)
-                    .map(converter::convertEntityToProductDetailsDto)
-                    .collect(Collectors.toList());
-        }
-        throw new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, productId));
     }
 
     }
