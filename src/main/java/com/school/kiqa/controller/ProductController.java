@@ -41,7 +41,6 @@ public class ProductController {
         PageRequest pageRequest = PageRequest.of(
                 pagination.getPageNumber() - 1,
                 pagination.getPageSize(),
-                //TODO: verify type of sort
                 pagination.getSort()
         );
 
@@ -77,6 +76,7 @@ public class ProductController {
     ) {
         log.info("received request to update product with id {}", id);
         final var product = productService.updateProductById(id, createOrUpdateProductDto);
+        log.info("product with id {} was successfully updated", id);
         return ResponseEntity.ok(product);
     }
 

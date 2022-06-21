@@ -21,6 +21,7 @@ public class MigrationController {
     public ResponseEntity<String> getProductsFromApi() {
         log.info("Received request to migrate products from MUA api to kiqa api");
         migrationAdapter.migrateApiToKiqaApi();
+        log.info("returned products from api successfully");
         return ResponseEntity.ok("Processing started");
     }
 }
