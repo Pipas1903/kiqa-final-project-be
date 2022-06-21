@@ -1,4 +1,6 @@
-package com.school.kiqa.exception;
+package com.school.kiqa.exception.alreadyExists;
+
+import com.school.kiqa.exception.KiqaException;
 
 public class AlreadyExistsException extends KiqaException {
 

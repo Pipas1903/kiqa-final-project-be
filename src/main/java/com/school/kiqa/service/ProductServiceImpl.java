@@ -4,10 +4,11 @@ import com.school.kiqa.command.Paginated;
 import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
 import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.converter.ProductConverter;
-import com.school.kiqa.exception.BrandNotFoundException;
-import com.school.kiqa.exception.CategoryNotFoundException;
-import com.school.kiqa.exception.ProductNotFoundException;
-import com.school.kiqa.exception.ProductTypeNotFoundException;
+import com.school.kiqa.exception.notFound.BrandNotFoundException;
+import com.school.kiqa.exception.notFound.CategoryNotFoundException;
+import com.school.kiqa.exception.notFound.ProductNotFoundException;
+import com.school.kiqa.exception.notFound.ProductTypeNotFoundException;
+import com.school.kiqa.exception.notFound.ResultsNotFoundException;
 import com.school.kiqa.persistence.entity.CategoryEntity;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import com.school.kiqa.persistence.repository.BrandRepository;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.BRAND_NOT_FOUND_BY_NAME;
 import static com.school.kiqa.exception.ErrorMessageConstants.CATEGORY_NOT_FOUND_BY_NAME;
+import static com.school.kiqa.exception.ErrorMessageConstants.NO_RESULTS_FOUND;
 import static com.school.kiqa.exception.ErrorMessageConstants.PRODUCT_NOT_FOUND;
 import static com.school.kiqa.exception.ErrorMessageConstants.PRODUCT_TYPE_NOT_FOUND_BY_NAME;
 import static com.school.kiqa.persistence.specifications.ProductSpecifications.endingAtPrice;
@@ -111,6 +113,12 @@ public class ProductServiceImpl implements ProductService {
 
         log.info("Filtered products");
 
+        if (products.getContent().isEmpty()) {
+            log.error("Couldn't find products with brands - {}, categories - {}, productTypes - {}, minPrice - {}, maxPrice - {}",
+                    brands, categories, productTypes, minPrice, maxPrice);
+            throw new ResultsNotFoundException(NO_RESULTS_FOUND);
+        }
+
         final List<ProductDetailsDto> list = products.stream()
                 .map(converter::convertEntityToProductDetailsDto)
                 .collect(Collectors.toList());
@@ -161,6 +169,11 @@ public class ProductServiceImpl implements ProductService {
     public Paginated<ProductDetailsDto> searchProductsByName(String name, PageRequest pageRequest) {
 
         Page<ProductEntity> products = productRepository.searchAllByNameContainingIgnoreCase(name, pageRequest);
+
+        if (products.isEmpty()) {
+            log.error("Couldn't find products with '{}' in name", name);
+            throw new ResultsNotFoundException(NO_RESULTS_FOUND);
+        }
 
         log.info("Retrieved {} results from search by name '{}'", products.getTotalElements(), name);
 

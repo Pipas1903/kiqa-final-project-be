@@ -1,5 +1,14 @@
 package com.school.kiqa.exception;
 
+import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
+import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
+import com.school.kiqa.exception.notFound.BrandNotFoundException;
+import com.school.kiqa.exception.notFound.CategoryNotFoundException;
+import com.school.kiqa.exception.notFound.ColorNotFoundException;
+import com.school.kiqa.exception.notFound.ProductNotFoundException;
+import com.school.kiqa.exception.notFound.ProductTypeNotFoundException;
+import com.school.kiqa.exception.notFound.ResultsNotFoundException;
+import com.school.kiqa.exception.notFound.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -12,11 +21,8 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +37,8 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                     ProductNotFoundException.class,
                     BrandNotFoundException.class,
                     ProductTypeNotFoundException.class,
-                    UserNotFoundException.class
+                    UserNotFoundException.class,
+                    ResultsNotFoundException.class
             }
     )
     public ResponseEntity<KiqaError> handleNotFoundException(Exception ex, HttpServletRequest req) {
