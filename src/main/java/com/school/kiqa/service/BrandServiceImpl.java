@@ -4,8 +4,8 @@ import com.school.kiqa.command.Paginated;
 import com.school.kiqa.command.dto.brand.BrandDetailsDto;
 import com.school.kiqa.command.dto.brand.CreateOrUpdateBrandDto;
 import com.school.kiqa.converter.BrandConverter;
-import com.school.kiqa.exception.AlreadyExistsException;
-import com.school.kiqa.exception.BrandNotFoundException;
+import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
+import com.school.kiqa.exception.notFound.BrandNotFoundException;
 import com.school.kiqa.exception.ErrorMessageConstants;
 import com.school.kiqa.persistence.entity.BrandEntity;
 import com.school.kiqa.persistence.repository.BrandRepository;
@@ -57,6 +57,7 @@ public class BrandServiceImpl implements BrandService {
         final List<BrandDetailsDto> list = brandEntities.stream()
                 .map(converter::convertEntityToBrandDto)
                 .collect(Collectors.toList());
+
 
         Paginated<BrandDetailsDto> paginated = new Paginated<>(
                 list,

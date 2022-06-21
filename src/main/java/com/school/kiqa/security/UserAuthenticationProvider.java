@@ -1,7 +1,7 @@
 package com.school.kiqa.security;
 
 import com.school.kiqa.command.dto.auth.PrincipalDto;
-import com.school.kiqa.exception.UserNotFoundException;
+import com.school.kiqa.exception.notFound.UserNotFoundException;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.UserRepository;
 import com.school.kiqa.util.JwtService;

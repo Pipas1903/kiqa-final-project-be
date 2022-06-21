@@ -7,7 +7,7 @@ import com.school.kiqa.command.dto.user.UserDetailsDto;
 import com.school.kiqa.converter.AddressConverter;
 import com.school.kiqa.converter.UserConverter;
 import com.school.kiqa.enums.UserType;
-import com.school.kiqa.exception.UserAlreadyExistsException;
+import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
 import com.school.kiqa.persistence.entity.AddressEntity;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.AddressRepository;

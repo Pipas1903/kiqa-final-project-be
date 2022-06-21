@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +44,27 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(loggedInUser);
+    }
+
+    @PostMapping("/basic-logout")
+    public ResponseEntity<Void> logout() {
+        log.info("Received request to logout user");
+
+        ResponseCookie invalidateCookie = ResponseCookie
+                .from(COOKIE, null)
+                .httpOnly(true)
+                .secure(false)
+                .maxAge(0L)
+                .path("/")
+                .build();
+
+        log.info("Cookie deleted");
+
+        SecurityContextHolder.clearContext();
+
+        log.info("User logged out");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, invalidateCookie.toString())
+                .build();
     }
 }

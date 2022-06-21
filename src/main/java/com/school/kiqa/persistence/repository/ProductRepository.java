@@ -12,5 +12,5 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long>, JpaSpecificationExecutor<ProductEntity> {
 
-    List<ProductEntity> searchAllByNameContainingIgnoreCase(String name);
+    Page<ProductEntity> searchAllByNameContainingIgnoreCase(String name, Pageable pageable);
 }

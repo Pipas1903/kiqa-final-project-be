@@ -21,7 +21,11 @@ public interface ProductService {
 
     ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto);
 
+    Paginated<ProductDetailsDto> searchProductsByName(String name, PageRequest pageRequest);
+
     ProductDetailsDto deactivateProduct(Long id);
 
     ProductDetailsDto activateProduct(Long id);
+
+    List<ProductDetailsDto> getRelatedProducts(String categoryName);
 }
