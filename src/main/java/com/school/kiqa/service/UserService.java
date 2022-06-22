@@ -7,13 +7,15 @@ import com.school.kiqa.command.dto.user.UserDetailsDto;
 import com.school.kiqa.enums.UserType;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 public interface UserService {
 
     UserDetailsDto createUser(CreateUserDto dto, UserType userType);
 
     UserDetailsDto getUserById(Long id);
 
-    Paginated<UserDetailsDto> getAllUsers(PageRequest page);
+    List<UserDetailsDto> getAllUsers();
 
     UserDetailsDto updateUser(UpdateUserDto updateUserDto);
 }

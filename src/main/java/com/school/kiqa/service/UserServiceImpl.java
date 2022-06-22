@@ -1,6 +1,5 @@
 package com.school.kiqa.service;
 
-import com.school.kiqa.command.Paginated;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
@@ -8,20 +7,22 @@ import com.school.kiqa.converter.AddressConverter;
 import com.school.kiqa.converter.UserConverter;
 import com.school.kiqa.enums.UserType;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
+import com.school.kiqa.exception.notFound.UserNotFoundException;
 import com.school.kiqa.persistence.entity.AddressEntity;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.AddressRepository;
 import com.school.kiqa.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.USER_ALREADY_EXISTS;
+import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -70,13 +71,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailsDto getUserById(Long id) {
-        return null;
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", id);
+                    return new UserNotFoundException(String.format(USER_NOT_FOUND, id));
+                });
+
+
+        log.info("returned user with id {} successfully", id);
+        return userConverter.convertEntityToUserDetailsDto(userEntity);
     }
 
+
     @Override
-    public Paginated<UserDetailsDto> getAllUsers(PageRequest page) {
-        return null;
+    public List<UserDetailsDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userConverter::convertEntityToUserDetailsDto)
+                .collect(Collectors.toList());
     }
+
+
 
     @Override
     public UserDetailsDto updateUser(UpdateUserDto updateUserDto) {

@@ -134,6 +134,7 @@ public class ProductServiceImpl implements ProductService {
         return paginated;
     }
 
+
     @Override
     public ProductDetailsDto getProductById(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
