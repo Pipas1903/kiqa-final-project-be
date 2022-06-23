@@ -87,6 +87,7 @@ public class ProductController {
         final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
         log.info("deactivated product with id {} successfully", id);
         return ResponseEntity.ok(changedProduct);
+    }
 
     @PatchMapping("/products/{id}/activate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
