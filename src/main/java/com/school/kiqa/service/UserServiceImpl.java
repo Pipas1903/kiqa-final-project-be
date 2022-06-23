@@ -52,22 +52,8 @@ public class UserServiceImpl implements UserService {
             log.info("Saved user phone number");
         }
 
-        if (dto.getMainAddress() == null) {
-            log.warn("User did not provide main address, saving with no address");
-            final var savedUser = userRepository.save(user);
-            log.info("Saved new user with id {} to database", savedUser.getId());
-            return userConverter.convertEntityToUserDetailsDto(savedUser);
-        }
-
         final var savedUser = userRepository.save(user);
         log.info("Saved new user with id {} to database", savedUser.getId());
-
-        AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(dto.getMainAddress());
-        address.setIsMain(true);
-        address.setUserEntity(savedUser);
-        addressRepository.save(address);
-
-        log.info("Saved user main address to database");
 
         return userConverter.convertEntityToUserDetailsDto(savedUser);
     }
