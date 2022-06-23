@@ -50,7 +50,7 @@ public class UserEntity {
     @Column(nullable = false)
     private Integer vat;
 
-    @Column(nullable = false)
+    @Column
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
