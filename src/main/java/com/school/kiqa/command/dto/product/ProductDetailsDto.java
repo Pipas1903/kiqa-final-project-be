@@ -11,23 +11,15 @@ import java.util.List;
 @Getter
 @Builder
 public class ProductDetailsDto {
+
     private Long id;
-
     private Double price;
-
     private String description;
-
     private String brand;
-
     private String name;
-
     private Boolean isActive;
-
     private String image;
-
     private String categoryName;
-
-    private String subCategoryName;
-
+    private String productTypeName;
     private List<ColorDto> colors;
 }

@@ -82,18 +82,19 @@ public class ProductController {
 
     @PatchMapping("/products/{id}/deactivate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
-    public ProductDetailsDto deactivateProduct(Long id) {
+    public ResponseEntity<ProductDetailsDto> deactivateProduct(Long id, boolean activeProduct) {
         log.info("request received to deactivate product with id {}", id);
-
-        //TODO: dois endpoints e mandam boolean para 1 só método do service
-        return null;
-    }
+        final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
+        log.info("deactivated product with id {} successfully", id);
+        return ResponseEntity.ok(changedProduct);
 
     @PatchMapping("/products/{id}/activate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
-    public ProductDetailsDto activateProduct(Long id) {
+    public ResponseEntity<ProductDetailsDto> activateProduct(Long id, boolean activeProduct) {
         log.info("request received to activate product with id {}", id);
-        return null;
+        final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
+        log.info("activated product with id {} successfully", id);
+        return ResponseEntity.ok(changedProduct);
     }
 
     @GetMapping("/products/search")
@@ -108,5 +109,4 @@ public class ProductController {
         log.info("Returning products that have '{}' in the name", name);
         return ResponseEntity.ok(products);
     }
-
 }
