@@ -31,7 +31,7 @@ public class ProductConverter {
                 .image(product.getImage())
                 .isActive(product.getIsActive())
                 .categoryName(product.getCategoryEntity().getName())
-                .subCategoryName(product.getProductTypeEntity().getName())
+                .productTypeName(product.getProductTypeEntity().getName())
                 .price(product.getPrice())
                 .colors(product.getColors().stream()
                         .map(converter::convertEntityToColorDto)
