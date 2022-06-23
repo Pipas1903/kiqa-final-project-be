@@ -14,5 +14,7 @@ public class ErrorMessageConstants {
 
     public static final String USER_NOT_FOUND = "Couldn't find user with id %s";
 
+    public static final String NO_RESULTS_FOUND ="No product matches given parameters";
+
 
 }

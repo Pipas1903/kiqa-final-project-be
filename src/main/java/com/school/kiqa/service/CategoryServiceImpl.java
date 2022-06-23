@@ -3,7 +3,7 @@ package com.school.kiqa.service;
 import com.school.kiqa.converter.CategoryConverter;
 import com.school.kiqa.command.dto.category.CategoryDetailsDto;
 import com.school.kiqa.command.dto.category.CreateOrUpdateCategoryDto;
-import com.school.kiqa.exception.AlreadyExistsException;
+import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
 import com.school.kiqa.persistence.entity.CategoryEntity;
 import com.school.kiqa.persistence.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;

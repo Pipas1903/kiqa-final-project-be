@@ -37,7 +37,7 @@ public class ProductController {
             @RequestParam(required = false) List<String> subCategory,
             @RequestParam(required = false) List<String> brands
     ) {
-        log.info("received request to get all products");
+        log.info("Request received to get all products");
         PageRequest pageRequest = PageRequest.of(
                 pagination.getPageNumber() - 1,
                 pagination.getPageSize(),
@@ -50,6 +50,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductDetailsDto> getProductById(@PathVariable Long id) {
         log.info("received request to get product with id {}", id);
@@ -61,7 +62,7 @@ public class ProductController {
     @GetMapping("/products/related")
     public ResponseEntity<List<ProductDetailsDto>> getRelatedProducts(
             @RequestParam(required = false, defaultValue = "lips") String categoryName) {
-        log.info("received request to get products related by category {}", categoryName);
+        log.info("Request received to get products related by category {}", categoryName);
         final var products = productService.getRelatedProducts(categoryName);
         log.info("products related to {} fetched", categoryName);
         return ResponseEntity.ok(products);
@@ -81,6 +82,8 @@ public class ProductController {
     @PatchMapping("/products/{id}/deactivate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ProductDetailsDto deactivateProduct(Long id) {
+        log.info("request received to deactivate product with id {}", id);
+
         //TODO: dois endpoints e mandam boolean para 1 só método do service
         return null;
     }
@@ -98,6 +101,7 @@ public class ProductController {
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
+        log.info("Request received to get products by name containing '{}'", name);
         final PageRequest pageRequest = PageRequest.of(page, size);
         final var products = productService.searchProductsByName(name, pageRequest);
         log.info("Returning products that have '{}' in the name", name);
