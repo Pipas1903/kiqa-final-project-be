@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -40,6 +41,13 @@ public class OrderProductEntity {
     )
     @JoinColumn(name = "product_id")
     private ProductEntity product;
+
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "color_id")
+    private ColorEntity color;
 
     @Column
     private Boolean isActive;

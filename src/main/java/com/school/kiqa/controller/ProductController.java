@@ -31,8 +31,8 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<Paginated<ProductDetailsDto>> getPaginatedFilteredAndSortedProducts(
             @ParameterObject @PageableDefault(page = 1) Pageable pagination,
-            @RequestParam(required = false, defaultValue = "0") double minPrice,
-            @RequestParam(required = false, defaultValue = "0") double maxPrice,
+            @RequestParam(required = false, defaultValue = "0") Double minPrice,
+            @RequestParam(required = false, defaultValue = "0") Double maxPrice,
             @RequestParam(required = false) List<String> category,
             @RequestParam(required = false) List<String> subCategory,
             @RequestParam(required = false) List<String> brands
@@ -41,7 +41,6 @@ public class ProductController {
         PageRequest pageRequest = PageRequest.of(
                 pagination.getPageNumber() - 1,
                 pagination.getPageSize(),
-                //TODO: verify type of sort
                 pagination.getSort()
         );
 

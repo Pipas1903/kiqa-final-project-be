@@ -47,24 +47,14 @@ public class UserServiceImpl implements UserService {
         log.info("Successfully encrypted user password");
         user.setUserType(userType);
 
-        if (dto.getMainAddress() == null) {
-            log.warn("User did not provide main address, saving with no address");
-            final var savedUser = userRepository.save(user);
-            log.info("Saved new user with id {} to database", savedUser.getId());
-            return userConverter.convertEntityToUserDetailsDto(savedUser);
+        if (dto.getPhoneNumber() != null) {
+            user.setPhoneNumber(dto.getPhoneNumber());
+            log.info("Saved user phone number");
         }
-        AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(dto.getMainAddress());
-        addressRepository.save(address);
-        log.info("Saved user main address to database");
-
-        List<AddressEntity> addressEntities = new ArrayList<>();
-        addressEntities.add(address);
-
-        user.setAddressEntities(addressEntities);
-        log.info("Set user main address");
 
         final var savedUser = userRepository.save(user);
         log.info("Saved new user with id {} to database", savedUser.getId());
+
         return userConverter.convertEntityToUserDetailsDto(savedUser);
     }
 

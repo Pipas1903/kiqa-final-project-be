@@ -60,8 +60,8 @@ public class ProductServiceImpl implements ProductService {
             List<String> brands,
             List<String> productTypes,
             List<String> categories,
-            double minPrice,
-            double maxPrice
+            Double minPrice,
+            Double maxPrice
     ) {
         List<Long> brandId = new ArrayList<>();
         List<Long> categoryId = new ArrayList<>();

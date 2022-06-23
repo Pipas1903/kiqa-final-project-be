@@ -35,6 +35,4 @@ public class CreateUserDto {
 
     private String phoneNumber;
 
-    private CreateOrUpdateAddressDto mainAddress;
-
 }

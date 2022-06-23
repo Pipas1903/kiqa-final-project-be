@@ -28,7 +28,7 @@ public class ProductFromApi {
 
     private Boolean isActive;
 
-    private String image_link;
+    private String api_featured_image;
 
     private List<Color> product_colors;
 }

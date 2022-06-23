@@ -14,8 +14,8 @@ public interface ProductService {
                                                 List<String> brands,
                                                 List<String> productTypes,
                                                 List<String> categories,
-                                                double minPrice,
-                                                double maxPrice
+                                                Double minPrice,
+                                                Double maxPrice
     );
 
     ProductDetailsDto getProductById(Long id);
