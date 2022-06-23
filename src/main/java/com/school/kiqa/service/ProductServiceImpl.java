@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+
+import static com.school.kiqa.exception.ErrorMessageConstants.*;
+import static com.school.kiqa.persistence.specifications.ProductSpecifications.*;
+
 import static com.school.kiqa.exception.ErrorMessageConstants.BRAND_NOT_FOUND_BY_NAME;
 import static com.school.kiqa.exception.ErrorMessageConstants.CATEGORY_NOT_FOUND_BY_NAME;
 import static com.school.kiqa.exception.ErrorMessageConstants.NO_RESULTS_FOUND;
@@ -166,6 +170,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activateProduct) {
+    
+        ProductEntity productEntity = productRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn(String.format(PRODUCT_NOT_FOUND, id));
+                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
+                });
+
+        return activateProduct ? activateProduct(productEntity, id) : deactivateProduct(productEntity, id);
+    }
+
+    @Override
+    public ProductDetailsDto activateProduct(ProductEntity productEntity, Long id) {
+        productEntity.setIsActive(true);
+        final var savedItem = productRepository.save(productEntity);
+        log.info("product with id {} was successfully activated", id);
+        return converter.convertEntityToProductDetailsDto(savedItem);
+    }
+
+    @Override
+    public ProductDetailsDto deactivateProduct(ProductEntity productEntity, Long id) {
+        productEntity.setIsActive(false);
+        final var savedItem = productRepository.save(productEntity);
+        log.info("product with id {} was successfully deactivated", id);
+        return converter.convertEntityToProductDetailsDto(savedItem);
+    }
+    
     public Paginated<ProductDetailsDto> searchProductsByName(String name, PageRequest pageRequest) {
 
         Page<ProductEntity> products = productRepository.searchAllByNameContainingIgnoreCase(name, pageRequest);
@@ -191,36 +222,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Returned products containing {} in the name", name);
         return paginated;
     }
-
-    @Override
-    public ProductDetailsDto deactivateProduct(Long id) {
-        ProductEntity productEntity = productRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("product with id {} does not exist", id);
-                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
-                });
-
-        productEntity.setIsActive(false);
-        final var savedItem = productRepository.save(productEntity);
-        log.info("product with id {} was successfully deactivated", id);
-        return converter.convertEntityToProductDetailsDto(savedItem);
-    }
-
-    @Override
-    public ProductDetailsDto activateProduct(Long id) {
-        ProductEntity productEntity = productRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("product with id {} does not exist", id);
-                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
-                });
-
-        productEntity.setIsActive(true);
-        final var savedItem = productRepository.save(productEntity);
-        log.info("product with id {} was successfully activated", id);
-        return converter.convertEntityToProductDetailsDto(savedItem);
-    }
-
-    @Override
+    
     public List<ProductDetailsDto> getRelatedProducts(String categoryName) {
 
         CategoryEntity category = categoryRepository.findByName(categoryName)

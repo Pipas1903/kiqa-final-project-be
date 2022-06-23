@@ -24,13 +24,18 @@ public class CategoryController {
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<CategoryDetailsDto> createCategory(@RequestBody CreateOrUpdateCategoryDto dto) {
         log.info("Request received to create new category");
-        return ResponseEntity.ok(categoryService.createCategory(dto));
+        final var category = categoryService.createCategory(dto);
+        log.info("Request received to create new category");
+        return ResponseEntity.ok(category);
     }
 
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryDetailsDto>> getAllCategories() {
         log.info("Request received to get all categories");
-        return ResponseEntity.ok(categoryService.getAllCategories());
+        final var categories = categoryService.getAllCategories();
+        log.info("returned all categories successfully");
+        return ResponseEntity.ok(categories);
+
     }
 
 }

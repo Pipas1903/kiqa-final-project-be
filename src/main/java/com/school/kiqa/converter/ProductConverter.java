@@ -5,7 +5,6 @@ import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.stream.Collectors;
 
 @Component
@@ -14,7 +13,13 @@ public class ProductConverter {
     private final ColorConverter converter;
 
     public ProductEntity convertDtoToProductEntity(CreateOrUpdateProductDto dto) {
-        return ProductEntity.builder().build();
+        return ProductEntity.builder()
+                .price(dto.getPrice())
+                .description(dto.getDescription())
+                .name(dto.getName())
+                .isActive(dto.getIsActive())
+                .image(dto.getImage())
+                .build();
     }
 
     public ProductDetailsDto convertEntityToProductDetailsDto(ProductEntity product) {
