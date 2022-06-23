@@ -1,6 +1,7 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.Paginated;
+import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
@@ -69,7 +70,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetailsDto updateUser(UpdateUserDto updateUserDto) {
+    public UserDetailsDto addAddress(CreateOrUpdateAddressDto addressDto, Long userId) {
+        return null;
+    }
+
+    @Override
+    public UserDetailsDto updateUser(UpdateUserDto updateUserDto, Long userId) {
         return null;
     }
 }
