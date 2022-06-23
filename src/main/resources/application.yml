@@ -7,7 +7,7 @@ spring:
     username: "${DB_USER}"
     password: "${DB_PASS}"
     tomcat:
-      max-active: 12
+      max-active: 5
   jpa:
     hibernate:
       ddl-auto: update

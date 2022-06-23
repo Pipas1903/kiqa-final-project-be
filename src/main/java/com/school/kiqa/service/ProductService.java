@@ -22,10 +22,13 @@ public interface ProductService {
 
     ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto);
 
-     ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activateProduct);
+    ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activateProduct);
 
     ProductDetailsDto activateProduct(ProductEntity productEntity, Long id);
 
     ProductDetailsDto deactivateProduct(ProductEntity productEntity, Long id);
 
+    Paginated<ProductDetailsDto> searchProductsByName(String name, PageRequest pageRequest);
+ 
+    List<ProductDetailsDto> getRelatedProducts(String categoryName);
 }

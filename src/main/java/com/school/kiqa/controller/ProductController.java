@@ -37,7 +37,7 @@ public class ProductController {
             @RequestParam(required = false) List<String> subCategory,
             @RequestParam(required = false) List<String> brands
     ) {
-        log.info("received request to get all products");
+        log.info("Request received to get all products");
         PageRequest pageRequest = PageRequest.of(
                 pagination.getPageNumber() - 1,
                 pagination.getPageSize(),
@@ -51,12 +51,22 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductDetailsDto> getProductById(@PathVariable Long id) {
         log.info("received request to get product with id {}", id);
         final var product = productService.getProductById(id);
         log.info("returned product with id {} successfully", id);
         return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/products/related")
+    public ResponseEntity<List<ProductDetailsDto>> getRelatedProducts(
+            @RequestParam(required = false, defaultValue = "lips") String categoryName) {
+        log.info("Request received to get products related by category {}", categoryName);
+        final var products = productService.getRelatedProducts(categoryName);
+        log.info("products related to {} fetched", categoryName);
+        return ResponseEntity.ok(products);
     }
 
     @PutMapping("/products/{id}")
@@ -77,7 +87,6 @@ public class ProductController {
         final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
         log.info("deactivated product with id {} successfully", id);
         return ResponseEntity.ok(changedProduct);
-    }
 
     @PatchMapping("/products/{id}/activate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
@@ -86,5 +95,18 @@ public class ProductController {
         final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
         log.info("activated product with id {} successfully", id);
         return ResponseEntity.ok(changedProduct);
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<Paginated<ProductDetailsDto>> searchProductByName(
+            @RequestParam String name,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        log.info("Request received to get products by name containing '{}'", name);
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        final var products = productService.searchProductsByName(name, pageRequest);
+        log.info("Returning products that have '{}' in the name", name);
+        return ResponseEntity.ok(products);
     }
 }
