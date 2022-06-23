@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @Getter
@@ -19,15 +20,18 @@ import java.time.LocalDate;
 @Builder
 public class CreateUserDto {
 
+    @NotNull
     private String name;
 
-    @Email
+    @Email(message = "Insert a valid email.")
     private String email;
 
     @NotNull
     private LocalDate dateOfBirth;
 
     @NotNull
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "password doesn't match the requirements")
     private String password;
 
     @NotNull
@@ -36,5 +40,4 @@ public class CreateUserDto {
     private String phoneNumber;
 
     private CreateOrUpdateAddressDto mainAddress;
-
 }
