@@ -1,6 +1,7 @@
 package com.school.kiqa.controller;
 
 import com.school.kiqa.command.dto.user.CreateUserDto;
+import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
 import com.school.kiqa.enums.UserType;
 import com.school.kiqa.service.UserService;
@@ -28,5 +29,30 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/users")
+    @PreAuthorize("@authorized.hasRole('ADMIN')")
+    public ResponseEntity<List<UserDetailsDto>> getAllUsers() {
+        log.info("Request received to get all users");
+        List<UserDetailsDto> users = userService.getAllUsers();
+        log.info("Returning users");
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDetailsDto> getUserById(@PathVariable Long id) {
+        log.info("Request received to get user with id {}", id);
+        UserDetailsDto user = userService.getUserById(id);
+        log.info("Returned user with id {}", id);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserDetailsDto> updateUserById(@PathVariable Long id,
+                                                         @RequestBody UpdateUserDto updateUserDto) {
+        log.info("Request received to update user with id {}", id);
+        UserDetailsDto user = userService.updateUserById(updateUserDto, id);
+        log.info("Returned updated user with id {}", id);
+        return ResponseEntity.ok(user);
+    }
 
 }

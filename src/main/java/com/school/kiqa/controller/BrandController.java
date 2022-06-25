@@ -9,12 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -49,6 +44,23 @@ public class BrandController {
         log.info("Received request to get brand by name {}", name);
         final var response = brandService.getBrandByName(name);
         log.info("returned brand with name {} successfully", name);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/brands/{id}")
+    public ResponseEntity<BrandDetailsDto> getBrandById(@PathVariable Long id) {
+        log.info("Received request to get brand by id {}", id);
+        final var response = brandService.getBrandById(id);
+        log.info("returned brand with id {} successfully", id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/brands/{id}")
+    @PreAuthorize("@authorized.hasRole('ADMIN')")
+    public ResponseEntity<BrandDetailsDto> updateBrandById(@PathVariable Long id, CreateOrUpdateBrandDto createOrUpdateBrandDto) {
+        log.info("Received request to update brand by id {}", id);
+        final var response = brandService.updateBrandById(id, createOrUpdateBrandDto);
+        log.info("returned brand with id {} successfully", id);
         return ResponseEntity.ok(response);
     }
 }

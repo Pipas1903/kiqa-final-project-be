@@ -83,10 +83,13 @@ public class CategoryServiceImpl implements CategoryService {
                     return new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_ID, categoryId));
                 });
 
-        final var savedCategory = categoryRepository.save(categoryEntity);
+        CategoryEntity category = converter.convertDtoToCategoryEntity(createOrUpdateCategoryDto);
+        category.setId(categoryId);
+
+        final var savedCategory = categoryRepository.save(category);
         log.info("Saved updated category with id {} to database", savedCategory.getId());
 
         log.info("category with id {} was successfully updated", categoryId);
-        return converter.convertEntityToCategoryDetails(categoryEntity);
+        return converter.convertEntityToCategoryDetails(category);
     }
 }

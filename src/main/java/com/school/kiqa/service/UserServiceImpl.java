@@ -151,7 +151,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailsDto addAddress(CreateOrUpdateAddressDto addressDto, Long userId) {
-        return null;
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", userId);
+                    return new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
+                });
+
+        AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(addressDto);
+        addressRepository.save(address);
+        log.info("Saved new address to database");
+
+        List<AddressEntity> addressEntities = new ArrayList<>();
+        addressEntities.addAll(userEntity.getAddressEntities());
+        addressEntities.add(address);
+
+        userEntity.setAddressEntities(addressEntities);
+        log.info("Set user addresses");
+
+        final var savedUser = userRepository.save(userEntity);
+        log.info("Saved user with id {} with new address {} to database", savedUser.getId(), addressDto);
+        return userConverter.convertEntityToUserDetailsDto(savedUser);
+
     }
 
 }

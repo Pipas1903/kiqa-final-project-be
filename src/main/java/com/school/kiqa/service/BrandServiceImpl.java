@@ -104,10 +104,13 @@ public class BrandServiceImpl implements BrandService {
                     return new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_ID, brandId));
                 });
 
-        final var savedBrand = brandRepository.save(brandEntity);
+        BrandEntity brand = converter.convertDtoToBrandEntity(createOrUpdateBrandDto);
+        brand.setId(brandId);
+
+        final var savedBrand = brandRepository.save(brand);
         log.info("Saved updated brand with id {} to database", savedBrand.getId());
 
         log.info("brand with id {} was successfully updated", brandId);
-        return converter.convertEntityToBrandDetailsDto(brandEntity);
+        return converter.convertEntityToBrandDetailsDto(brand);
     }
 }
