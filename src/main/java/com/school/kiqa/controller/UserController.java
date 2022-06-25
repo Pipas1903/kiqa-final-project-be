@@ -1,5 +1,6 @@
 package com.school.kiqa.controller;
 
+import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
@@ -55,4 +56,11 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/users/{id}/address")
+    public ResponseEntity<UserDetailsDto> addAddress(@RequestBody CreateOrUpdateAddressDto addressDto, @PathVariable Long userId) {
+        log.info("Request received to add address {} to the user with id {}", addressDto, userId);
+        UserDetailsDto user = userService.addAddress(addressDto, userId);
+        log.info("Returning user with an added address");
+        return ResponseEntity.ok(user);
+    }
 }
