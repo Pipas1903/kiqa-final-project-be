@@ -3,9 +3,11 @@ package com.school.kiqa.exception;
 public class ErrorMessageConstants {
 
     public static final String BRAND_ALREADY_EXISTS = "Brand with name %s already exists";
+    public static final String BRAND_NOT_FOUND_BY_ID = "Couldn't find brand with id %s";
     public static final String BRAND_NOT_FOUND_BY_NAME = "Couldn't find brand with name %s";
     public static final String CATEGORY_ALREADY_EXISTS = "Category with name %s already exists";
     public static final String CATEGORY_NOT_FOUND_BY_NAME = "Couldn't find category with name %s";
+    public static final String CATEGORY_NOT_FOUND_BY_ID = "Couldn't find category with id %s";
     public static final String COLOR_HEX_VALUE_ALREADY_EXISTS = "Color with hex value %s already exists";
     public static final String COLOR_NAME_ALREADY_EXISTS = "Color with name %s already exists";
     public static final String COLOR_NOT_FOUND_BY_HEX_VALUE = "Couldn't find color with hex value %s";
