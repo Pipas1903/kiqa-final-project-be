@@ -15,7 +15,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 
 @Getter
 @Setter
@@ -58,4 +60,11 @@ public class AddressEntity {
     )
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
+
+    @OneToMany(
+            mappedBy = "sendingAddress",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private List<OrderEntity> orders;
 }

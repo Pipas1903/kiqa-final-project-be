@@ -1,6 +1,5 @@
 package com.school.kiqa.command.dto.user;
 
-import com.school.kiqa.command.dto.address.AddressDetailsDto;
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,4 +39,5 @@ public class CreateUserDto {
     private String phoneNumber;
 
     private CreateOrUpdateAddressDto mainAddress;
+
 }

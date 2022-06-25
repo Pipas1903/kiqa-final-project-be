@@ -28,7 +28,7 @@ public class BrandController {
     public ResponseEntity<BrandDetailsDto> createBrand(@RequestBody CreateOrUpdateBrandDto dto) {
         log.info("Received request to create brand");
         final var response = brandService.createBrand(dto);
-
+        log.info("brand created successfully");
         return ResponseEntity.ok(response);
     }
 
@@ -48,6 +48,7 @@ public class BrandController {
     public ResponseEntity<BrandDetailsDto> getBrandByName(@PathVariable String name) {
         log.info("Received request to get brand by name {}", name);
         final var response = brandService.getBrandByName(name);
+        log.info("returned brand with name {} successfully", name);
         return ResponseEntity.ok(response);
     }
 }

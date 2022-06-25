@@ -25,14 +25,14 @@ public class ProductSpecifications {
         return (root, query, criteriaBuilder) -> root.get("brandEntity").in(brandIds);
     }
 
-    public static Specification<ProductEntity> startingAtPrice(double minPrice) {
-        if (minPrice == 0)
+    public static Specification<ProductEntity> startingAtPrice(Double minPrice) {
+        if (minPrice == 0 || minPrice == null)
             return null;
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice);
     }
 
-    public static Specification<ProductEntity> endingAtPrice(double maxPrice) {
-        if (maxPrice == 0)
+    public static Specification<ProductEntity> endingAtPrice(Double maxPrice) {
+        if (maxPrice == 0 || maxPrice == null)
             return null;
         return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice);
     }

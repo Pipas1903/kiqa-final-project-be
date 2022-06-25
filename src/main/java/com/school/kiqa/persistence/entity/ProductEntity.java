@@ -71,6 +71,7 @@ public class ProductEntity {
     )
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
+
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "products_and_colors",

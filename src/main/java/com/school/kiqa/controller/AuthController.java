@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +47,7 @@ public class AuthController {
                 .body(loggedInUser);
     }
 
-    @PostMapping("/basic-logout")
+    @DeleteMapping("/basic-logout")
     public ResponseEntity<Void> logout() {
         log.info("Received request to logout user");
 

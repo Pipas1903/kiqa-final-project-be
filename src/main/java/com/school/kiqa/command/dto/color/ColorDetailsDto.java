@@ -1,18 +1,15 @@
 package com.school.kiqa.command.dto.color;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 @Builder
-public class ColorDto {
+public class ColorDetailsDto {
 
+    private Long id;
     private String hexValue;
     private String colourName;
 }

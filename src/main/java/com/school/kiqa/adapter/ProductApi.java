@@ -7,4 +7,6 @@ public interface ProductApi {
     void migrateApiToKiqaApi();
 
     List<ProductFromApi> getProductsFromExternalApi();
+
+    void updateProductImage();
 }
