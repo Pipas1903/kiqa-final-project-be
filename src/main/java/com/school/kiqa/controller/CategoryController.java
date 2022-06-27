@@ -38,7 +38,7 @@ public class CategoryController {
     @GetMapping("/categories/{id}")
     public ResponseEntity<CategoryDetailsDto> getCategoryById(@PathVariable Long id) {
         log.info("Request received to get category with id {}", id);
-        CategoryDetailsDto category = categoryService.getCategoryById(id);
+        final var category = categoryService.getCategoryById(id);
         log.info("Returned category with id {}", id);
         return ResponseEntity.ok(category);
     }
@@ -46,7 +46,7 @@ public class CategoryController {
     @GetMapping("/categories/{name}")
     public ResponseEntity<CategoryDetailsDto> getCategoryByName(@PathVariable String name) {
         log.info("Request received to get category with name {}", name);
-        CategoryDetailsDto category = categoryService.getCategoryByName(name);
+        final var category = categoryService.getCategoryByName(name);
         log.info("Returned category with name {}", name);
         return ResponseEntity.ok(category);
     }
@@ -56,7 +56,7 @@ public class CategoryController {
     public ResponseEntity<CategoryDetailsDto> updateCategoryById(@PathVariable Long id,
                                                          @RequestBody CreateOrUpdateCategoryDto createOrUpdateCategoryDto) {
         log.info("Request received to update category with id {}", id);
-        CategoryDetailsDto category = categoryService.updateCategoryById(id, createOrUpdateCategoryDto);
+        final var category = categoryService.updateCategoryById(id, createOrUpdateCategoryDto);
         log.info("Returned updated category with id {}", id);
         return ResponseEntity.ok(category);
     }

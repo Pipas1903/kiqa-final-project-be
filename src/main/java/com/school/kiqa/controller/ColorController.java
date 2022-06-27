@@ -23,7 +23,7 @@ public class ColorController {
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<ColorDetailsDto> createColor(@Valid @RequestBody CreateOrUpdateColorDto colorDto) {
         log.info("Request received to create color with name {} and hex value {}", colorDto.getColourName(), colorDto.getHexValue());
-        ColorDetailsDto color = colorService.createColor(colorDto);
+        final var color = colorService.createColor(colorDto);
         log.info("Returning created color");
         return ResponseEntity.ok(color);
     }
@@ -31,7 +31,7 @@ public class ColorController {
     @GetMapping("/colors")
     public ResponseEntity<List<ColorDetailsDto>> getAllColors() {
         log.info("Request received to get all colors");
-        List<ColorDetailsDto> colors = colorService.getAllColors();
+        final var colors = colorService.getAllColors();
         log.info("Returning colors");
         return ResponseEntity.ok(colors);
     }
@@ -39,7 +39,7 @@ public class ColorController {
     @GetMapping("/colors/{id}")
     public ResponseEntity<ColorDetailsDto> getColorById(@PathVariable Long id) {
         log.info("Request received to get color with id {}", id);
-        ColorDetailsDto color = colorService.getColorById(id);
+        final var color = colorService.getColorById(id);
         log.info("Returned color with id {}", id);
         return ResponseEntity.ok(color);
     }
@@ -47,7 +47,7 @@ public class ColorController {
     @PutMapping("/colors/{hexValue}")
     public ResponseEntity<ColorDetailsDto> getColorByHexValue(@PathVariable String hexValue) {
         log.info("Request received to get color with hexValue {}", hexValue);
-        ColorDetailsDto color = colorService.getColorByHexValue(hexValue);
+        final var color = colorService.getColorByHexValue(hexValue);
         log.info("Returned color with hexValue {}", hexValue);
         return ResponseEntity.ok(color);
     }

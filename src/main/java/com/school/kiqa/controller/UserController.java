@@ -25,7 +25,7 @@ public class UserController {
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<UserDetailsDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         log.info("Request received to create user with role {}", UserType.USER);
-        UserDetailsDto user = userService.createUser(createUserDto, UserType.USER);
+        final var user = userService.createUser(createUserDto, UserType.USER);
         log.info("Returning created user");
         return ResponseEntity.ok(user);
     }
@@ -34,7 +34,7 @@ public class UserController {
     @PreAuthorize("@authorized.hasRole('ADMIN')")
     public ResponseEntity<List<UserDetailsDto>> getAllUsers() {
         log.info("Request received to get all users");
-        List<UserDetailsDto> users = userService.getAllUsers();
+        final var users = userService.getAllUsers();
         log.info("Returning users");
         return ResponseEntity.ok(users);
     }
@@ -42,7 +42,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDetailsDto> getUserById(@PathVariable Long id) {
         log.info("Request received to get user with id {}", id);
-        UserDetailsDto user = userService.getUserById(id);
+        final var user = userService.getUserById(id);
         log.info("Returned user with id {}", id);
         return ResponseEntity.ok(user);
     }
@@ -51,7 +51,7 @@ public class UserController {
     public ResponseEntity<UserDetailsDto> updateUserById(@PathVariable Long id,
                                                          @RequestBody UpdateUserDto updateUserDto) {
         log.info("Request received to update user with id {}", id);
-        UserDetailsDto user = userService.updateUserById(updateUserDto, id);
+        final var user = userService.updateUserById(updateUserDto, id);
         log.info("Returned updated user with id {}", id);
         return ResponseEntity.ok(user);
     }
@@ -59,7 +59,7 @@ public class UserController {
     @PostMapping("/users/{id}/address")
     public ResponseEntity<UserDetailsDto> addAddress(@RequestBody CreateOrUpdateAddressDto addressDto, @PathVariable Long userId) {
         log.info("Request received to add address {} to the user with id {}", addressDto, userId);
-        UserDetailsDto user = userService.addAddress(addressDto, userId);
+        final var user = userService.addAddress(addressDto, userId);
         log.info("Returning user with an added address");
         return ResponseEntity.ok(user);
     }
