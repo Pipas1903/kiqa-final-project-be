@@ -139,17 +139,19 @@ public class UserServiceImpl implements UserService {
             log.info("phone number of the user with id {} was successfully updated", id);
         }
 
-        if (updateUserDto.getAddressList() != null ) {
+        final var savedUser = userRepository.save(userEntity);
+
+        if (updateUserDto.getAddressList() != null) {
             log.info("request received to update the address list of the user with id {}", id);
             List<AddressEntity> addressEntityList =  updateUserDto.getAddressList().stream().map(addressConverter::convertCreateDtoToAddressEntity)
                     .collect(Collectors.toList());
 
-           userEntity.setAddressEntities(addressEntityList);
+            addressEntityList.forEach(address -> address.setUserEntity(savedUser));
+
+            final var savedAddressEntityList = addressRepository.saveAll(addressEntityList);
+            userEntity.setAddressEntities(savedAddressEntityList);
             log.info("address list of the user with id {} was successfully updated", id);
         }
-
-        final var savedUser = userRepository.save(userEntity);
-        log.info("Saved updated user with id {} to database", savedUser.getId());
 
         log.info("user with id {} was successfully updated", id);
         return userConverter.convertEntityToUserDetailsDto(userEntity);
@@ -164,6 +166,9 @@ public class UserServiceImpl implements UserService {
                     return new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
                 });
 
+        final var savedUser = userRepository.save(userEntity);
+        log.info("Saved user with id {} with new address {} to database", savedUser.getId(), addressDto);
+
         AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(addressDto);
         addressRepository.save(address);
         log.info("Saved new address to database");
@@ -173,12 +178,7 @@ public class UserServiceImpl implements UserService {
         addressEntities.add(address);
 
         userEntity.setAddressEntities(addressEntities);
-        log.info("Set user addresses");
-
-        final var savedUser = userRepository.save(userEntity);
-        log.info("Saved user with id {} with new address {} to database", savedUser.getId(), addressDto);
+        log.info("Set user addresses successfully");
         return userConverter.convertEntityToUserDetailsDto(savedUser);
-
     }
-
 }
