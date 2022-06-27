@@ -33,7 +33,7 @@ public class ColorServiceImpl implements ColorService {
                     throw new ColorAlreadyExistsException(String.format(COLOR_HEX_VALUE_ALREADY_EXISTS, colorDto.getHexValue()));
                 });
 
-        colorRepository.findByColourName(colorDto.getColourName())
+        colorRepository.findByColorName(colorDto.getColourName())
                 .ifPresent(color -> {
                     log.warn(String.format(COLOR_NAME_ALREADY_EXISTS, colorDto.getColourName()));
                     throw new ColorAlreadyExistsException(String.format(COLOR_NAME_ALREADY_EXISTS, colorDto.getColourName()));
