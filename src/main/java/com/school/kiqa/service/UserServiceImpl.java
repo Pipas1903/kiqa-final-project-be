@@ -61,6 +61,9 @@ public class UserServiceImpl implements UserService {
             return userConverter.convertEntityToUserDetailsDto(savedUser);
         }
 
+        final var savedUser = userRepository.save(user);
+        log.info("Saved new user with id {} to database", savedUser.getId());
+
         AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(dto.getMainAddress());
         address.setIsMain(true);
         addressRepository.save(address);
@@ -70,10 +73,7 @@ public class UserServiceImpl implements UserService {
         addressEntities.add(address);
 
         user.setAddressEntities(addressEntities);
-        log.info("Set user main address");
-
-        final var savedUser = userRepository.save(user);
-        log.info("Saved new user with id {} to database", savedUser.getId());
+        log.info("Set user main address successfully");
         return userConverter.convertEntityToUserDetailsDto(savedUser);
     }
 
@@ -156,7 +156,6 @@ public class UserServiceImpl implements UserService {
         log.info("user with id {} was successfully updated", id);
         return userConverter.convertEntityToUserDetailsDto(userEntity);
     }
-
 
     @Override
     public UserDetailsDto addAddress(CreateOrUpdateAddressDto addressDto, Long userId) {
