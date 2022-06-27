@@ -1,25 +1,20 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.dto.color.ColorDetailsDto;
-import com.school.kiqa.command.dto.color.ColorDto;
+import com.school.kiqa.command.dto.color.CreateOrUpdateColorDto;
 import com.school.kiqa.converter.ColorConverter;
 import com.school.kiqa.exception.alreadyExists.ColorAlreadyExistsException;
-import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
 import com.school.kiqa.exception.notFound.ColorNotFoundException;
 import com.school.kiqa.persistence.entity.ColorEntity;
-import com.school.kiqa.persistence.entity.OrderProductEntity;
-import com.school.kiqa.persistence.entity.ProductEntity;
 import com.school.kiqa.persistence.repository.ColorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.*;
-import static com.school.kiqa.exception.ErrorMessageConstants.USER_ALREADY_EXISTS;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +25,7 @@ public class ColorServiceImpl implements ColorService {
     private final ColorConverter converter;
 
     @Override
-    public ColorDetailsDto createColor(ColorDto colorDto) {
+    public ColorDetailsDto createColor(CreateOrUpdateColorDto colorDto) {
 
         colorRepository.findByHexValue(colorDto.getHexValue())
                 .ifPresent(color -> {

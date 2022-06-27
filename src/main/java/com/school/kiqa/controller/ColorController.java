@@ -1,14 +1,8 @@
 package com.school.kiqa.controller;
 
-import com.school.kiqa.adapter.Color;
 import com.school.kiqa.command.dto.color.ColorDetailsDto;
-import com.school.kiqa.command.dto.color.ColorDto;
-import com.school.kiqa.command.dto.user.CreateUserDto;
-import com.school.kiqa.command.dto.user.UpdateUserDto;
-import com.school.kiqa.command.dto.user.UserDetailsDto;
-import com.school.kiqa.enums.UserType;
+import com.school.kiqa.command.dto.color.CreateOrUpdateColorDto;
 import com.school.kiqa.service.ColorService;
-import com.school.kiqa.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +21,7 @@ public class ColorController {
 
     @PostMapping("/colors")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
-    public ResponseEntity<ColorDetailsDto> createColor(@Valid @RequestBody ColorDto colorDto) {
+    public ResponseEntity<ColorDetailsDto> createColor(@Valid @RequestBody CreateOrUpdateColorDto colorDto) {
         log.info("Request received to create color with name {} and hex value {}", colorDto.getColourName(), colorDto.getHexValue());
         ColorDetailsDto color = colorService.createColor(colorDto);
         log.info("Returning created color");
