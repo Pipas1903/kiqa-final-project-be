@@ -110,35 +110,42 @@ public class UserServiceImpl implements UserService {
 
 
         if (updateUserDto.getName() != null) {
+            log.info("request received to update the name of the user with id {}", id);
             userEntity.setName(updateUserDto.getName());
+            log.info("name of the user with id {} was successfully updated", id);
         }
 
         if (updateUserDto.getDateOfBirth() != null) {
+            log.info("request received to update the date of birth of the user with id {}", id);
             userEntity.setDateOfBirth(updateUserDto.getDateOfBirth());
+            log.info("date of birth of the user with id {} was successfully updated", id);
         }
 
         if (updateUserDto.getPassword()!= null) {
+            log.info("request received to update the password of the user with id {}", id);
             userEntity.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
-            log.info("Successfully encrypted user password");
-
-
+            log.info("password of the user with id {} was successfully updated", id);
         }
 
         if (updateUserDto.getVat() != null) {
+            log.info("request received to update the vat of the user with id {}", id);
             userEntity.setVat(updateUserDto.getVat());
-
+            log.info("vat of the user with id {} was successfully updated", id);
         }
 
         if (updateUserDto.getPhoneNumber() != null) {
+            log.info("request received to update the phone number of the user with id {}", id);
             userEntity.setPhoneNumber(updateUserDto.getPhoneNumber());
+            log.info("phone number of the user with id {} was successfully updated", id);
         }
 
         if (updateUserDto.getAddressList() != null ) {
-           List<AddressEntity> addressEntityList =  updateUserDto.getAddressList().stream().map(addressConverter::convertCreateDtoToAddressEntity)
+            log.info("request received to update the address list of the user with id {}", id);
+            List<AddressEntity> addressEntityList =  updateUserDto.getAddressList().stream().map(addressConverter::convertCreateDtoToAddressEntity)
                     .collect(Collectors.toList());
 
            userEntity.setAddressEntities(addressEntityList);
-
+            log.info("address list of the user with id {} was successfully updated", id);
         }
 
         final var savedUser = userRepository.save(userEntity);

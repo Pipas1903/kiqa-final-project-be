@@ -11,5 +11,4 @@ public interface ColorService {
     List<ColorDetailsDto> getAllColors();
     ColorDetailsDto getColorById(Long colorId);
     ColorDetailsDto getColorByHexValue(String hexValue);
-
 }
