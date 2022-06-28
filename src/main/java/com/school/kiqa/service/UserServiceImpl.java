@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("user with id {} does not exist", id);
-                    return new UserNotFoundException(String.format(USER_NOT_FOUND, id));
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, id));
                 });
 
 
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("user with id {} does not exist", id);
-                    return new UserNotFoundException(String.format(USER_NOT_FOUND, id));
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, id));
                 });
 
 
@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.warn("user with id {} does not exist", userId);
-                    return new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
                 });
 
         final var savedUser = userRepository.save(userEntity);

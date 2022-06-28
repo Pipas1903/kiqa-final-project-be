@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
                     .map(brandName -> brandRepository.findByName(brandName)
                             .orElseThrow(() -> {
                                 log.error(String.format(BRAND_NOT_FOUND_BY_NAME, brandName));
-                                return new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_NAME, brandName));
+                                throw new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_NAME, brandName));
                             })
                             .getId()
                     )
@@ -85,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
                     .map(categoryName -> categoryRepository.findByName(categoryName)
                             .orElseThrow(() -> {
                                 log.error(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
-                                return new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
+                                throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
                             })
                             .getId()
                     )
@@ -98,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
                     .map(productTypeName -> productTypeRepository.findByName(productTypeName)
                             .orElseThrow(() -> {
                                 log.error(String.format(PRODUCT_TYPE_NOT_FOUND_BY_NAME, productTypeName));
-                                return new ProductTypeNotFoundException(String.format(PRODUCT_TYPE_NOT_FOUND_BY_NAME, productTypeName));
+                                throw new ProductTypeNotFoundException(String.format(PRODUCT_TYPE_NOT_FOUND_BY_NAME, productTypeName));
                             })
                             .getId()
                     )
@@ -144,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("product with id {} does not exist", id);
-                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
+                    throw new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
                 });
 
 
@@ -157,7 +157,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("product with id {} does not exist", id);
-                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
+                    throw new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
                 });
 
         //TODO: set product brand, category, productType etc
@@ -176,7 +176,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn(String.format(PRODUCT_NOT_FOUND, id));
-                    return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
+                    throw new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, id));
                 });
 
         return activateProduct ? activateProduct(productEntity, id) : deactivateProduct(productEntity, id);
@@ -229,7 +229,7 @@ public class ProductServiceImpl implements ProductService {
         CategoryEntity category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> {
                     log.warn(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
-                    return new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
+                    throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
                 });
 
         long numberOfProducts = 10;

@@ -58,7 +58,7 @@ public class ColorServiceImpl implements ColorService {
         ColorEntity colorEntity = colorRepository.findById(colorId)
                 .orElseThrow(() -> {
                     log.warn("color with id {} does not exist", colorId);
-                    return new ColorNotFoundException(String.format(COLOR_NOT_FOUND_BY_ID, colorId));
+                    throw new ColorNotFoundException(String.format(COLOR_NOT_FOUND_BY_ID, colorId));
                 });
 
         log.info("returned color with id {} successfully", colorId);
@@ -70,7 +70,7 @@ public class ColorServiceImpl implements ColorService {
         ColorEntity colorEntity = colorRepository.findByHexValue(hexValue)
                 .orElseThrow(() -> {
                     log.warn("color with hex value {} does not exist", hexValue);
-                    return new ColorNotFoundException(String.format(COLOR_NOT_FOUND_BY_HEX_VALUE, hexValue));
+                    throw new ColorNotFoundException(String.format(COLOR_NOT_FOUND_BY_HEX_VALUE, hexValue));
                 });
 
         log.info("returned color with hex value {} successfully", hexValue);

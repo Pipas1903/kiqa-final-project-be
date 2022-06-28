@@ -76,11 +76,10 @@ public class BrandServiceImpl implements BrandService {
         BrandEntity brand = brandRepository.findByName(name)
                 .orElseThrow(() -> {
                     log.warn(String.format(BRAND_NOT_FOUND_BY_NAME, name));
-                    return new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_NAME, name));
+                    throw new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_NAME, name));
                 });
 
         log.info("Retrieved brand {} from database", brand.getName());
-
         return converter.convertEntityToBrandDetailsDto(brand);
     }
 
@@ -89,7 +88,7 @@ public class BrandServiceImpl implements BrandService {
         BrandEntity brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> {
                     log.warn(String.format(BRAND_NOT_FOUND_BY_ID, brandId));
-                    return new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_ID, brandId));
+                    throw new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_ID, brandId));
                 });
 
         log.info("Retrieved brand {} from database", brand.getId());
@@ -101,7 +100,7 @@ public class BrandServiceImpl implements BrandService {
         BrandEntity brandEntity = brandRepository.findById(brandId)
                 .orElseThrow(() -> {
                     log.warn("brand with id {} does not exist", brandId);
-                    return new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_ID, brandId));
+                    throw new BrandNotFoundException(String.format(BRAND_NOT_FOUND_BY_ID, brandId));
                 });
 
         BrandEntity brand = converter.convertDtoToBrandEntity(createOrUpdateBrandDto);

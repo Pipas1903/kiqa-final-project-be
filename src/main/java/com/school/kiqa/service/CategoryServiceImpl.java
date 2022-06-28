@@ -39,7 +39,6 @@ public class CategoryServiceImpl implements CategoryService {
         final CategoryEntity savedCategory = categoryRepository.save(category);
 
         log.info("Category saved to database");
-
         return converter.convertEntityToCategoryDetails(savedCategory);
     }
 
@@ -56,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> {
                     log.warn("category with id {} does not exist", categoryId);
-                    return new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_ID, categoryId));
+                    throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_ID, categoryId));
                 });
 
         log.info("returned category with id {} successfully", categoryId);
@@ -68,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity categoryEntity = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> {
                     log.warn("category with name {} does not exist", categoryName);
-                    return new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
+                    throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_NAME, categoryName));
                 });
 
         log.info("returned category with name {} successfully", categoryName);
@@ -80,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> {
                     log.warn("category with id {} does not exist", categoryId);
-                    return new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_ID, categoryId));
+                    throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_BY_ID, categoryId));
                 });
 
         CategoryEntity category = converter.convertDtoToCategoryEntity(createOrUpdateCategoryDto);
