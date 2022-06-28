@@ -34,9 +34,8 @@ public class ProductConverter {
                 .productTypeName(product.getProductTypeEntity().getName())
                 .price(product.getPrice())
                 .colors(product.getColors().stream()
-                        .map(converter::convertEntityToColorDto)
+                        .map(converter::convertEntityToColorDetailsDto)
                         .collect(Collectors.toList()))
-
                 .build();
     }
 }

@@ -1,6 +1,6 @@
 package com.school.kiqa.command.dto.product;
 
-import com.school.kiqa.command.dto.color.ColorDto;
+import com.school.kiqa.command.dto.color.CreateOrUpdateColorDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +19,5 @@ public class CreateOrUpdateProductDto {
     private String image;
     private String categoryName;
     private String productTypeName;
-    private List<ColorDto> colors;
+    private List<CreateOrUpdateColorDto> colors;
 }

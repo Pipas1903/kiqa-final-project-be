@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ColorDto {
+public class CreateOrUpdateColorDto {
+
     private String hexValue;
     private String colourName;
 }
