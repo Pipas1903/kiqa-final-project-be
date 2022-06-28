@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
-        configuration.setAllowedOrigins(Collections.singletonList("https://kiqa.vercel.app"));
+        configuration.setAllowedOrigins(List.of("https://kiqa.vercel.app", "http://localhost"));
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
