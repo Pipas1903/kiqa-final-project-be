@@ -32,7 +32,7 @@ public class AuthController {
                 .from(COOKIE, loggedInUser.getToken())
                 .httpOnly(true)
                 .sameSite("None")
-                .secure(false)
+                .secure(true)
                 .maxAge(24 * 60 * 60)
                 .path("/")
                 .build();
