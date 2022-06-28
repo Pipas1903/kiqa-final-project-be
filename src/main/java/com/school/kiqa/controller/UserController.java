@@ -3,9 +3,12 @@ package com.school.kiqa.controller;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
 import com.school.kiqa.enums.UserType;
+import com.school.kiqa.persistence.entity.EmailMessage;
+import com.school.kiqa.service.EmailService;
 import com.school.kiqa.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,11 +22,25 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/users")
     public ResponseEntity<UserDetailsDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         log.info("Request received to create user with role {}", UserType.USER);
         UserDetailsDto user = userService.createUser(createUserDto, UserType.USER);
         log.info("Returning created user");
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/users/email")
+    public void sendEmail(@RequestBody EmailMessage emailMessage) {
+
+        try {
+            emailService.send(emailMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
