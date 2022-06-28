@@ -26,7 +26,6 @@ import java.util.List;
 @Builder
 public class CreateOrUpdateOrderDto {
     private Double totalPrice;
-    private Boolean status;
     private Long userId;
     private List<CreateOrUpdateOrderProductDto> productDtos;
     private CreateOrUpdateAddressDto addressDto;
