@@ -3,8 +3,6 @@ package com.school.kiqa.service;
 import com.school.kiqa.command.dto.order.CreateOrUpdateOrderDto;
 import com.school.kiqa.command.dto.order.OrderDetailsDto;
 import com.school.kiqa.command.dto.orderProduct.CreateOrUpdateOrderProductDto;
-import com.school.kiqa.command.dto.orderProduct.OrderProductDetailsDto;
-import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.converter.AddressConverter;
 import com.school.kiqa.converter.ColorConverter;
 import com.school.kiqa.converter.OrderConverter;
@@ -36,11 +34,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.school.kiqa.exception.ErrorMessageConstants.COLOR_NOT_FOUND;
-import static com.school.kiqa.exception.ErrorMessageConstants.ORDER_NOT_FOUND;
-import static com.school.kiqa.exception.ErrorMessageConstants.ORDER_PRODUCT_NOT_FOUND;
-import static com.school.kiqa.exception.ErrorMessageConstants.PRODUCT_NOT_FOUND;
-import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
+import static com.school.kiqa.exception.ErrorMessageConstants.*;
 
 @RequiredArgsConstructor
 @Service
@@ -176,7 +170,9 @@ public class OrderServiceImpl implements OrderService {
                 });
 
         orderProductEntity.setQuantity(quantity);
-        return orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        final var savedOrder = orderRepository.save(orderEntity);
+        savedOrder.setUserEntity(userEntity);
+        return orderConverter.convertEntityToOrderDetailsDto(savedOrder);
 
         //orderEntity.setTotalPrice();
 
@@ -184,17 +180,83 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailsDto removeProductFromOrder(Long orderProductId, Long orderId, Long userId) {
-        return null;
+        OrderProductEntity orderProductEntity = orderProductRepository.findById(orderProductId)
+                .orElseThrow(() -> {
+                    log.warn("order product with id {} does not exist", orderProductId);
+                    throw new OrderProductNotFoundException(String.format(ORDER_PRODUCT_NOT_FOUND, orderProductId));
+                });
+
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.warn("order with id {} does not exist", orderId);
+                    throw new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
+                });
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", userId);
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
+                });
+
+        orderEntity.getOrderProductEntityList().remove(orderProductId);
+        final var savedOrder = orderRepository.save(orderEntity);
+        savedOrder.setUserEntity(userEntity);
+        return orderConverter.convertEntityToOrderDetailsDto(savedOrder);
     }
 
     @Override
     public OrderDetailsDto incrementProductQuantity(Long orderProductId, Long orderId, Long userId) {
-        return null;
+        OrderProductEntity orderProductEntity = orderProductRepository.findById(orderProductId)
+                .orElseThrow(() -> {
+                    log.warn("order product with id {} does not exist", orderProductId);
+                    throw new OrderProductNotFoundException(String.format(ORDER_PRODUCT_NOT_FOUND, orderProductId));
+                });
+
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.warn("order with id {} does not exist", orderId);
+                    throw new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
+                });
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", userId);
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
+                });
+
+        orderProductEntity.setQuantity(orderProductEntity.getQuantity() + 1);
+
+        final var savedOrder = orderRepository.save(orderEntity);
+        savedOrder.setUserEntity(userEntity);
+        return orderConverter.convertEntityToOrderDetailsDto(savedOrder);
     }
 
     @Override
     public OrderDetailsDto decrementProductQuantity(Long orderProductId, Long orderId, Long userId) {
-        return null;
+
+        OrderProductEntity orderProductEntity = orderProductRepository.findById(orderProductId)
+                .orElseThrow(() -> {
+                    log.warn("order product with id {} does not exist", orderProductId);
+                    throw new OrderProductNotFoundException(String.format(ORDER_PRODUCT_NOT_FOUND, orderProductId));
+                });
+
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.warn("order with id {} does not exist", orderId);
+                    throw new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
+                });
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", userId);
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
+                });
+
+        orderProductEntity.setQuantity(orderProductEntity.getQuantity() - 1);
+
+        final var savedOrder = orderRepository.save(orderEntity);
+        savedOrder.setUserEntity(userEntity);
+        return orderConverter.convertEntityToOrderDetailsDto(savedOrder);
     }
 
     @Override
