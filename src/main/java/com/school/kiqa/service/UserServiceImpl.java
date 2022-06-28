@@ -66,13 +66,9 @@ public class UserServiceImpl implements UserService {
 
         AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(dto.getMainAddress());
         address.setIsMain(true);
+        address.setUserEntity(savedUser);
         addressRepository.save(address);
-        log.info("Saved user main address to database");
 
-        List<AddressEntity> addressEntities = new ArrayList<>();
-        addressEntities.add(address);
-
-        user.setAddressEntities(addressEntities);
         log.info("Set user main address successfully");
         return userConverter.convertEntityToUserDetailsDto(savedUser);
     }
