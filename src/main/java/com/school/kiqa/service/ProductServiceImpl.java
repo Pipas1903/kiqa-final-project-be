@@ -1,6 +1,7 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.Paginated;
+import com.school.kiqa.command.dto.color.ColorDetailsDto;
 import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
 import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.converter.ColorConverter;
@@ -114,7 +115,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         final List<ProductDetailsDto> list = products.stream()
-                .map(converter::convertEntityToProductDetailsDto)
+                .map(product -> {
+                    List<ColorDetailsDto> colors = product.getColors().stream()
+                            .map(colorConverter::convertEntityToColorDetailsDto)
+                            .collect(Collectors.toList());
+                    ProductDetailsDto productDetailsDto = converter.convertEntityToProductDetailsDto(product);
+                    productDetailsDto.setColors(colors);
+                    return productDetailsDto;
+                })
                 .collect(Collectors.toList());
 
         Paginated<ProductDetailsDto> paginated = new Paginated<>(
@@ -141,7 +149,7 @@ public class ProductServiceImpl implements ProductService {
         prod.setColors(productEntity.getColors()
                 .stream()
                 .map(colorConverter::convertEntityToColorDetailsDto)
-                        .collect(Collectors.toList()));
+                .collect(Collectors.toList()));
 
         log.info("returned product with id {} successfully", id);
         return prod;
@@ -174,7 +182,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailsDto activateOrDeactivateProduct(Long id, boolean activateProduct) {
-    
+
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn(String.format(PRODUCT_NOT_FOUND, id));
@@ -215,7 +223,7 @@ public class ProductServiceImpl implements ProductService {
 
         return prod;
     }
-    
+
     public Paginated<ProductDetailsDto> searchProductsByName(String name, PageRequest pageRequest) {
 
         Page<ProductEntity> products = productRepository.searchAllByNameContainingIgnoreCase(name, pageRequest);
@@ -228,7 +236,14 @@ public class ProductServiceImpl implements ProductService {
         log.info("Retrieved {} results from search by name '{}'", products.getTotalElements(), name);
 
         final List<ProductDetailsDto> list = products.stream()
-                .map(converter::convertEntityToProductDetailsDto)
+                .map(product -> {
+                    List<ColorDetailsDto> colors = product.getColors().stream()
+                            .map(colorConverter::convertEntityToColorDetailsDto)
+                            .collect(Collectors.toList());
+                    ProductDetailsDto productDetailsDto = converter.convertEntityToProductDetailsDto(product);
+                    productDetailsDto.setColors(colors);
+                    return productDetailsDto;
+                })
                 .collect(Collectors.toList());
 
         Paginated<ProductDetailsDto> paginated = new Paginated<>(
@@ -241,7 +256,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Returned products containing {} in the name", name);
         return paginated;
     }
-    
+
     public List<ProductDetailsDto> getRelatedProducts(String categoryName) {
 
         CategoryEntity category = categoryRepository.findByName(categoryName)
@@ -273,7 +288,14 @@ public class ProductServiceImpl implements ProductService {
         log.info("Retrieved {} products from database", relatedProducts.getPageable().getPageSize());
 
         List<ProductDetailsDto> convertedProducts = relatedProducts.getContent().stream()
-                .map(converter::convertEntityToProductDetailsDto)
+                .map(product -> {
+                    List<ColorDetailsDto> colors = product.getColors().stream()
+                            .map(colorConverter::convertEntityToColorDetailsDto)
+                            .collect(Collectors.toList());
+                    ProductDetailsDto productDetailsDto = converter.convertEntityToProductDetailsDto(product);
+                    productDetailsDto.setColors(colors);
+                    return productDetailsDto;
+                })
                 .collect(Collectors.toList());
 
         log.info("Converted productEntities to productDetailsDto");
