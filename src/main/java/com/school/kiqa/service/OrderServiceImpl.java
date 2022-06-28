@@ -138,28 +138,19 @@ public class OrderServiceImpl implements OrderService {
 
         orderProductEntityList.forEach(orderProduct -> orderProduct.setOrderEntity(savedOrder));
 
-        //TODO: meter isto sem os details
         OrderDetailsDto orderDetailsDto = orderConverter.convertEntityToOrderDetailsDto(savedOrder);
         orderDetailsDto.setAddressDetailsDto(addressConverter.convertEntityToAddressDetailsDto(savedOrder.getSendingAddress()));
 
-        final var orderProductDetailsList = orderProductEntityList.stream()
-                .map(orderProduct -> {
-                    OrderProductDetailsDto orderProductDet = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProduct);
-                    orderProductDet.setColorDto(colorConverter.convertEntityToColorDetailsDto(orderProduct.getColor()));
-                    return orderProductDet;
+        final var orderProductDetails = savedOrder.getOrderProductEntityList().stream()
+                .map(orderProductEntity -> {
+                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
+                    if (orderProductEntity.getColor() != null)
+                        converted.setColorId(orderProductEntity.getColor().getId());
+                    converted.setOrderId(savedOrder.getId());
+                    return converted;
                 })
                 .collect(Collectors.toList());
-
-        orderProductDetailsList.forEach(dto -> {
-            ProductEntity product = productRepository.findById(dto.getProductId())
-                    .orElseThrow(() -> {
-                        log.error(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
-                        return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
-                    });
-            dto.setProductDetailsDto(productConverter.convertEntityToProductDetailsDto(product));
-        });
-
-        orderDetailsDto.setOrderProductDetailsDtoList(orderProductDetailsList);
+        orderDetailsDto.setOrderProductDetailsDtoList(orderProductDetails);
         log.info("retrieving details of the order");
         return orderDetailsDto;
     }

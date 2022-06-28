@@ -17,6 +17,5 @@ public class OrderProductDetailsDto {
     private Integer quantity;
     private Long productId;
     private Long orderId;
-    private ColorDetailsDto colorDto;
-    private ProductDetailsDto productDetailsDto;
+    private Long colorId;
 }
