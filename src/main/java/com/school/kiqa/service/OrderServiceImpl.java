@@ -3,7 +3,10 @@ package com.school.kiqa.service;
 import com.school.kiqa.command.dto.order.CreateOrUpdateOrderDto;
 import com.school.kiqa.command.dto.order.OrderDetailsDto;
 import com.school.kiqa.command.dto.orderProduct.CreateOrUpdateOrderProductDto;
+import com.school.kiqa.command.dto.orderProduct.OrderProductDetailsDto;
+import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.converter.AddressConverter;
+import com.school.kiqa.converter.ColorConverter;
 import com.school.kiqa.converter.OrderConverter;
 import com.school.kiqa.converter.OrderProductConverter;
 import com.school.kiqa.converter.ProductConverter;
@@ -53,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderConverter orderConverter;
     private final AddressConverter addressConverter;
     private final ProductConverter productConverter;
+    private final ColorConverter colorConverter;
 
 
     @Override
@@ -136,18 +140,23 @@ public class OrderServiceImpl implements OrderService {
 
         OrderDetailsDto orderDetailsDto = orderConverter.convertEntityToOrderDetailsDto(savedOrder);
         orderDetailsDto.setAddressDetailsDto(addressConverter.convertEntityToAddressDetailsDto(savedOrder.getSendingAddress()));
+
         final var orderProductDetailsList = orderProductEntityList.stream()
-                .map(orderProductConverter::convertEntityToOrderProductDetailsDto)
+                .map(orderProduct -> {
+                    OrderProductDetailsDto orderProductDet = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProduct);
+                    orderProductDet.setColorDto(colorConverter.convertEntityToColorDetailsDto(orderProduct.getColor()));
+                    return orderProductDet;
+                })
                 .collect(Collectors.toList());
+
         orderProductDetailsList.forEach(dto -> {
-                    ProductEntity product = productRepository.findById(dto.getProductId())
-                            .orElseThrow(() -> {
-                                log.error(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
-                                return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
-                            });
-                    dto.setProductDetailsDto(productConverter.convertEntityToProductDetailsDto(product));
-                }
-        );
+            ProductEntity product = productRepository.findById(dto.getProductId())
+                    .orElseThrow(() -> {
+                        log.error(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
+                        return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
+                    });
+            dto.setProductDetailsDto(productConverter.convertEntityToProductDetailsDto(product));
+        });
 
         orderDetailsDto.setOrderProductDetailsDtoList(orderProductDetailsList);
         log.info("retrieving details of the order");
@@ -156,7 +165,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailsDto updateProductQuantity(Long orderProductId, Long orderId, int quantity, Long userId) {
-        // HERE NETOOOOOOOOOO UUUUUUUUU este é o teu spot <3
         OrderProductEntity orderProductEntity = orderProductRepository.findById(orderProductId)
                 .orElseThrow(() -> {
                     log.warn("order product with id {} does not exist", orderProductId);
