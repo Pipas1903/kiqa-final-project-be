@@ -1,6 +1,6 @@
 package com.school.kiqa.adapter;
 
-import com.school.kiqa.command.dto.color.ColorDto;
+import com.school.kiqa.command.dto.color.CreateOrUpdateColorDto;
 import com.school.kiqa.exception.notFound.BrandNotFoundException;
 import com.school.kiqa.exception.notFound.CategoryNotFoundException;
 import com.school.kiqa.exception.notFound.ColorNotFoundException;
@@ -151,7 +151,7 @@ public class MigrationAdapter implements ProductApi {
                 return;
             }
 
-            ColorDto colorDto = ColorDto.builder()
+            CreateOrUpdateColorDto colorDto = CreateOrUpdateColorDto.builder()
                     .colourName(color.getColour_name().toUpperCase())
                     .hexValue(color.getHex_value().toUpperCase())
                     .build();

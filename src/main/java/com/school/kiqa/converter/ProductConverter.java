@@ -5,7 +5,6 @@ import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

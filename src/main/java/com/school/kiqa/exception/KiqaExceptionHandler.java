@@ -1,6 +1,7 @@
 package com.school.kiqa.exception;
 
 import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
+import com.school.kiqa.exception.alreadyExists.ColorAlreadyExistsException;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
 import com.school.kiqa.exception.notFound.BrandNotFoundException;
 import com.school.kiqa.exception.notFound.CategoryNotFoundException;
@@ -23,7 +24,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +56,13 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {AlreadyExistsException.class, UserAlreadyExistsException.class})
+    @ExceptionHandler(
+            value = {
+                    AlreadyExistsException.class,
+                    ColorAlreadyExistsException.class,
+                    UserAlreadyExistsException.class
+            }
+            )
     public ResponseEntity<KiqaError> handleAlreadyExistsException(Exception ex, HttpServletRequest req) {
         KiqaError error = KiqaError.builder()
                 .message(ex.getMessage())
@@ -68,7 +74,11 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(value = {WrongCredentialsException.class})
+    @ExceptionHandler(
+            value = {
+                    WrongCredentialsException.class
+            }
+            )
     public ResponseEntity<KiqaError> handleWrongCredentialsException(Exception ex, HttpServletRequest req) {
         KiqaError error = KiqaError.builder()
                 .message(ex.getMessage())

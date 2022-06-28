@@ -11,4 +11,9 @@ public interface BrandService {
     Paginated<BrandDetailsDto> getAllBrands(PageRequest pageRequest, boolean hasProducts);
 
     BrandDetailsDto getBrandByName(String name);
+
+    BrandDetailsDto getBrandById(Long brandId);
+
+    BrandDetailsDto updateBrandById(Long brandId, CreateOrUpdateBrandDto createOrUpdateBrandDto);
+
 }

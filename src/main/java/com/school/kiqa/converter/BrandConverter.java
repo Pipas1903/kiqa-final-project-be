@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BrandConverter {
-    public BrandDetailsDto convertEntityToBrandDto(BrandEntity brand) {
+    public BrandDetailsDto convertEntityToBrandDetailsDto(BrandEntity brand) {
         return BrandDetailsDto.builder()
                 .id(brand.getId())
                 .name(brand.getName())
