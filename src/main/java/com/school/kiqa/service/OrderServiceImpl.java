@@ -6,10 +6,13 @@ import com.school.kiqa.command.dto.orderProduct.CreateOrUpdateOrderProductDto;
 import com.school.kiqa.converter.AddressConverter;
 import com.school.kiqa.converter.OrderConverter;
 import com.school.kiqa.converter.OrderProductConverter;
+import com.school.kiqa.converter.ProductConverter;
 import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
 import com.school.kiqa.exception.notFound.ColorNotFoundException;
 import com.school.kiqa.exception.notFound.OrderNotFoundException;
+import com.school.kiqa.exception.notFound.OrderProductNotFoundException;
 import com.school.kiqa.exception.notFound.ProductNotFoundException;
+import com.school.kiqa.exception.notFound.UserNotFoundException;
 import com.school.kiqa.persistence.entity.AddressEntity;
 import com.school.kiqa.persistence.entity.ColorEntity;
 import com.school.kiqa.persistence.entity.OrderEntity;
@@ -32,7 +35,9 @@ import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.COLOR_NOT_FOUND;
 import static com.school.kiqa.exception.ErrorMessageConstants.ORDER_NOT_FOUND;
+import static com.school.kiqa.exception.ErrorMessageConstants.ORDER_PRODUCT_NOT_FOUND;
 import static com.school.kiqa.exception.ErrorMessageConstants.PRODUCT_NOT_FOUND;
+import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -47,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductConverter orderProductConverter;
     private final OrderConverter orderConverter;
     private final AddressConverter addressConverter;
+    private final ProductConverter productConverter;
 
 
     @Override
@@ -87,20 +93,20 @@ public class OrderServiceImpl implements OrderService {
         final AddressEntity[] sendingAddress = new AddressEntity[1];
 
         sendingAddress[0] = addressConverter.convertCreateDtoToAddressEntity(orderDto.getAddressDto());
+        sendingAddress[0].setIsMain(true);
 
         user.ifPresent(userEntity -> {
-                    orderEntity.setUserEntity(userEntity);
-                    sendingAddress[0] =
-                            userEntity.getAddressEntities().stream()
-                                    .filter(address ->
-                                            address.getCityName().equals(sendingAddress[0].getCityName()) &&
-                                                    address.getStreetName().equals(sendingAddress[0].getStreetName()) &&
-                                                    address.getDoorNumber().equals(sendingAddress[0].getDoorNumber()) &&
-                                                    address.getFloorNumber().equals(sendingAddress[0].getFloorNumber()))
-                                    .findFirst()
-                                    .get();
-                }
-        );
+            orderEntity.setUserEntity(userEntity);
+            userEntity.getAddressEntities().stream()
+                    .filter(address ->
+                            address.getCityName().equals(sendingAddress[0].getCityName()) &&
+                                    address.getStreetName().equals(sendingAddress[0].getStreetName()) &&
+                                    address.getDoorNumber().equals(sendingAddress[0].getDoorNumber()) &&
+                                    address.getFloorNumber().equals(sendingAddress[0].getFloorNumber()))
+                    .findFirst()
+                    .ifPresent(address -> sendingAddress[0] = address);
+            orderEntity.setUserEntity(userEntity);
+        });
 
         orderEntity.setSendingAddress(sendingAddress[0]);
         log.info("set sending address");
@@ -117,19 +123,63 @@ public class OrderServiceImpl implements OrderService {
         log.info("set orderProductEntity list");
 
         orderEntity.setTotalPrice(orderProductEntityList.stream()
-                .map(orderProductEntity -> orderProductEntity.getProduct().getPrice())
-                .reduce(0d, Double::sum)
+                .map(orderProductEntity -> orderProductEntity.getProduct().getPrice() * orderProductEntity.getQuantity())
+                .mapToDouble(Double::doubleValue)
+                .sum()
+        );
+        log.info("set total price to {} €", orderEntity.getTotalPrice());
+
+        final OrderEntity savedOrder = orderRepository.save(orderEntity);
+        log.info("Saved order to database with id {}", savedOrder.getId());
+
+        orderProductEntityList.forEach(orderProduct -> orderProduct.setOrderEntity(savedOrder));
+
+        OrderDetailsDto orderDetailsDto = orderConverter.convertEntityToOrderDetailsDto(savedOrder);
+        orderDetailsDto.setAddressDetailsDto(addressConverter.convertEntityToAddressDetailsDto(savedOrder.getSendingAddress()));
+        final var orderProductDetailsList = orderProductEntityList.stream()
+                .map(orderProductConverter::convertEntityToOrderProductDetailsDto)
+                .collect(Collectors.toList());
+        orderProductDetailsList.forEach(dto -> {
+                    ProductEntity product = productRepository.findById(dto.getProductId())
+                            .orElseThrow(() -> {
+                                log.error(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
+                                return new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, dto.getProductId()));
+                            });
+                    dto.setProductDetailsDto(productConverter.convertEntityToProductDetailsDto(product));
+                }
         );
 
-        log.info("set total price to {}€", orderEntity.getTotalPrice());
-
-
-        return null;
+        orderDetailsDto.setOrderProductDetailsDtoList(orderProductDetailsList);
+        log.info("retrieving details of the order");
+        return orderDetailsDto;
     }
 
     @Override
     public OrderDetailsDto updateProductQuantity(Long orderProductId, Long orderId, int quantity, Long userId) {
-        return null;
+        // HERE NETOOOOOOOOOO UUUUUUUUU este é o teu spot <3
+        OrderProductEntity orderProductEntity = orderProductRepository.findById(orderProductId)
+                .orElseThrow(() -> {
+                    log.warn("order product with id {} does not exist", orderProductId);
+                    throw new OrderProductNotFoundException(String.format(ORDER_PRODUCT_NOT_FOUND, orderProductId));
+                });
+
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.warn("order with id {} does not exist", orderId);
+                    throw new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
+                });
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", userId);
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
+                });
+
+        orderProductEntity.setQuantity(quantity);
+        return orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+
+        //orderEntity.setTotalPrice();
+
     }
 
     @Override
@@ -169,14 +219,16 @@ public class OrderServiceImpl implements OrderService {
         orderProduct.setIsActive(product.getIsActive());
         log.info("OrderProduct active status set to '{}'", product.getIsActive());
 
-        ColorEntity color = colorRepository.findById(orderProductDto.getColorId())
-                .orElseThrow(() -> {
-                    log.error(String.format(COLOR_NOT_FOUND, orderProductDto.getColorId()));
-                    return new ColorNotFoundException(String.format(COLOR_NOT_FOUND, orderProductDto.getColorId()));
-                });
+        if (orderProductDto.getColorId() != 0) {
+            ColorEntity color = colorRepository.findById(orderProductDto.getColorId())
+                    .orElseThrow(() -> {
+                        log.error(String.format(COLOR_NOT_FOUND, orderProductDto.getColorId()));
+                        return new ColorNotFoundException(String.format(COLOR_NOT_FOUND, orderProductDto.getColorId()));
+                    });
 
-        orderProduct.setColor(color);
-        log.info("OrderProduct color set to {}", color.getHexValue());
+            orderProduct.setColor(color);
+            log.info("OrderProduct color set to {}", color.getHexValue());
+        }
 
         final var savedOrderProduct = orderProductRepository.save(orderProduct);
         log.info("OrderProduct saved to data base");

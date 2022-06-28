@@ -138,6 +138,7 @@ public class ProductServiceImpl implements ProductService {
         return paginated;
     }
 
+    //TODO
     @Override
     public ProductDetailsDto getProductById(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
@@ -151,6 +152,7 @@ public class ProductServiceImpl implements ProductService {
         return converter.convertEntityToProductDetailsDto(productEntity);
     }
 
+    //TODO
     @Override
     public ProductDetailsDto updateProductById(Long id, CreateOrUpdateProductDto createOrUpdateProductDto) {
         ProductEntity productEntity = productRepository.findById(id)
@@ -181,6 +183,7 @@ public class ProductServiceImpl implements ProductService {
         return activateProduct ? activateProduct(productEntity, id) : deactivateProduct(productEntity, id);
     }
 
+    //TODO
     @Override
     public ProductDetailsDto activateProduct(ProductEntity productEntity, Long id) {
         productEntity.setIsActive(true);
@@ -189,6 +192,7 @@ public class ProductServiceImpl implements ProductService {
         return converter.convertEntityToProductDetailsDto(savedItem);
     }
 
+    //TODO
     @Override
     public ProductDetailsDto deactivateProduct(ProductEntity productEntity, Long id) {
         productEntity.setIsActive(false);

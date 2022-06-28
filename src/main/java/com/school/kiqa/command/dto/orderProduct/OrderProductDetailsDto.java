@@ -1,5 +1,6 @@
 package com.school.kiqa.command.dto.orderProduct;
 
+import com.school.kiqa.command.dto.color.ColorDto;
 import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +17,6 @@ public class OrderProductDetailsDto {
     private Integer quantity;
     private Long productId;
     private Long orderId;
+    private ColorDto colorDto;
     private ProductDetailsDto productDetailsDto;
 }

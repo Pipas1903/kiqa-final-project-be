@@ -33,10 +33,6 @@ public class ProductConverter {
                 .categoryName(product.getCategoryEntity().getName())
                 .productTypeName(product.getProductTypeEntity().getName())
                 .price(product.getPrice())
-                .colors(product.getColors().stream()
-                        .map(converter::convertEntityToColorDto)
-                        .collect(Collectors.toList()))
-
                 .build();
     }
 }

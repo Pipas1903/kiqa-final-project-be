@@ -6,6 +6,7 @@ import com.school.kiqa.exception.notFound.BrandNotFoundException;
 import com.school.kiqa.exception.notFound.CategoryNotFoundException;
 import com.school.kiqa.exception.notFound.ColorNotFoundException;
 import com.school.kiqa.exception.notFound.OrderNotFoundException;
+import com.school.kiqa.exception.notFound.OrderProductNotFoundException;
 import com.school.kiqa.exception.notFound.ProductNotFoundException;
 import com.school.kiqa.exception.notFound.ProductTypeNotFoundException;
 import com.school.kiqa.exception.notFound.ResultsNotFoundException;
@@ -40,7 +41,8 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                     ProductTypeNotFoundException.class,
                     UserNotFoundException.class,
                     ResultsNotFoundException.class,
-                    OrderNotFoundException.class
+                    OrderNotFoundException.class,
+                    OrderProductNotFoundException.class
             }
     )
     public ResponseEntity<KiqaError> handleNotFoundException(Exception ex, HttpServletRequest req) {

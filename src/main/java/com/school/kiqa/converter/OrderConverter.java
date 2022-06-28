@@ -12,6 +12,9 @@ public class OrderConverter {
 
     public OrderDetailsDto convertEntityToOrderDetailsDto(OrderEntity orderEntity) {
         return OrderDetailsDto.builder()
+                .id(orderEntity.getId())
+                .userId(orderEntity.getUserEntity().getId())
+                .totalPrice(orderEntity.getTotalPrice())
                 .creationDate(orderEntity.getCreationDate())
                 .status(orderEntity.getStatus())
                 .build();
