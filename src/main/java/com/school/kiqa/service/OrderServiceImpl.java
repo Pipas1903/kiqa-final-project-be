@@ -138,6 +138,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderProductEntityList.forEach(orderProduct -> orderProduct.setOrderEntity(savedOrder));
 
+        //TODO: meter isto sem os details
         OrderDetailsDto orderDetailsDto = orderConverter.convertEntityToOrderDetailsDto(savedOrder);
         orderDetailsDto.setAddressDetailsDto(addressConverter.convertEntityToAddressDetailsDto(savedOrder.getSendingAddress()));
 

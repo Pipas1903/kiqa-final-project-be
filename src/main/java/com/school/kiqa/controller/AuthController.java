@@ -31,7 +31,8 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie
                 .from(COOKIE, loggedInUser.getToken())
                 .httpOnly(true)
-                .secure(false)
+                .sameSite("None")
+                .secure(true)
                 .maxAge(24 * 60 * 60)
                 .path("/")
                 .build();
