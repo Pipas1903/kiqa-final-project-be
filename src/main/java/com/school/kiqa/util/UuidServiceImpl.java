@@ -43,7 +43,7 @@ public class UuidServiceImpl implements UuidService {
 
     @Override
     public Long verifyUuid(String uuid) {
-        SessionEntity session = sessionRepository.findByUuid(uuid)
+        SessionEntity session = sessionRepository.findByTokenUuid(uuid)
                 .orElseThrow(() -> {
                     log.error("Session with uuid {} doesn't exist", uuid);
                     return new SessionNotFoundException(String.format(SESSION_NOT_FOUND_UUID, uuid));
