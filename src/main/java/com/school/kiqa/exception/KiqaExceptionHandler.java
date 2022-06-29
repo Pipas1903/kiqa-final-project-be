@@ -62,7 +62,8 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
             value = {
                     AlreadyExistsException.class,
                     ColorAlreadyExistsException.class,
-                    UserAlreadyExistsException.class
+                    UserAlreadyExistsException.class,
+                    PasswordMismatchException.class
             }
             )
     public ResponseEntity<KiqaError> handleAlreadyExistsException(Exception ex, HttpServletRequest req) {
@@ -106,7 +107,6 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
         ValidationError error = ValidationError.builder()
                 .failedValidationsList(validationList)
                 .exception(ex.getClass().getSimpleName())
-                .message(ex.getMessage())
                 .path(((ServletWebRequest) request).getRequest().getRequestURI())
                 .build();
 

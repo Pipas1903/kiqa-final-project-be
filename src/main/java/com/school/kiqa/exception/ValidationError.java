@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 public class ValidationError {
     private List<String> failedValidationsList;
-    private String message;
     private String exception;
     private String path;
 }

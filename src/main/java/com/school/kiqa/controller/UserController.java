@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    @PreAuthorize("@authorized.isUser(id)")
+    @PreAuthorize("@authorized.isUser(#id)")
     public ResponseEntity<UserDetailsDto> updateUserById(@PathVariable Long id,
                                                          @RequestBody UpdateUserDto updateUserDto) {
         log.info("Request received to update user with id {}", id);
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/users/{id}/address")
-    @PreAuthorize("@authorized.isUser(id)")
+    @PreAuthorize("@authorized.isUser(#userId)")
     public ResponseEntity<UserDetailsDto> addAddress(@RequestBody CreateOrUpdateAddressDto addressDto, @PathVariable Long userId) {
         log.info("Request received to add address {} to the user with id {}", addressDto, userId);
         final var user = userService.addAddress(addressDto, userId);
