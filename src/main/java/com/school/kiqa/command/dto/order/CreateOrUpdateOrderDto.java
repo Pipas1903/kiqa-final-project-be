@@ -25,8 +25,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CreateOrUpdateOrderDto {
-    private Double totalPrice;
-    private Boolean status;
     private Long userId;
     private List<CreateOrUpdateOrderProductDto> productDtos;
     private CreateOrUpdateAddressDto addressDto;
