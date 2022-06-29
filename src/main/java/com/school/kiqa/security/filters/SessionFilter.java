@@ -18,33 +18,31 @@ import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
-public class CookieFilter extends OncePerRequestFilter {
-
-    private final String COOKIE = "cookie_auth";
+public class SessionFilter extends OncePerRequestFilter {
+    private final String SESSION_COOKIE = "x-session";
     private final UserAuthenticationProvider authenticationProvider;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        Optional<Cookie> authCookie = Stream.of(Optional.ofNullable(request.getCookies())
+        Optional<Cookie> sessionCookie = Stream.of(Optional.ofNullable(request.getCookies())
                         .orElse(new Cookie[0]))
-                .filter(cookie -> COOKIE.equals(cookie.getName()) &&
+                .filter(cookie -> SESSION_COOKIE.equals(cookie.getName()) &&
                         Objects.nonNull(cookie.getValue()) &&
                         !cookie.getValue().isEmpty())
                 .findFirst();
 
         try {
-            authCookie.ifPresent(cookie -> {
+            sessionCookie.ifPresent(cookie -> {
                 SecurityContextHolder.getContext()
-                        .setAuthentication(authenticationProvider.validateToken(cookie.getValue()));
-                log.info("Authenticated with auth cookie");
+                        .setAuthentication(authenticationProvider.validateSession(cookie.getValue()));
+                log.info("Authenticated with session cookie (uuid)");
             });
 
         } catch (RuntimeException e) {
             SecurityContextHolder.clearContext();
-            log.error("Cookie validation failed");
+            log.error("Session cookie validation failed");
         }
 
         filterChain.doFilter(request, response);

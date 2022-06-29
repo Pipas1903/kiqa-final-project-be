@@ -12,6 +12,7 @@ public class ErrorMessageConstants {
     public static final String COLOR_NAME_ALREADY_EXISTS = "Color with name %s already exists";
     public static final String COLOR_NOT_FOUND_BY_HEX_VALUE = "Couldn't find color with hex value %s";
     public static final String COLOR_NOT_FOUND_BY_ID = "Couldn't find color with id %s";
+    public static final String INVALID_HEADER="Given header doesn't match expected value. Session not created.";
     public static final String NO_RESULTS_FOUND ="No product matches given parameters";
     public static final String COLOR_NOT_FOUND = "Couldn't find color with id %s";
     public static final String PRODUCT_NOT_FOUND = "Couldn't find product with id %s";
@@ -21,6 +22,8 @@ public class ErrorMessageConstants {
     public static final String USER_ALREADY_EXISTS = "User with email %s already exists";
     public static final String USER_NOT_FOUND = "Couldn't find user with id %s";
     public static final String WRONG_CREDENTIALS = "Invalid Email and/or Password";
+
+    public static final String SESSION_NOT_FOUND_UUID = "Couldn't find session with uuid %s";
 
 
 }

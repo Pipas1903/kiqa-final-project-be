@@ -7,6 +7,7 @@ import com.school.kiqa.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/orders")
+    @PreAuthorize("@authorized.hasRole('USER')")
     public ResponseEntity<OrderDetailsDto> createOrder(@RequestBody CreateOrUpdateOrderDto createOrUpdateOrderDto) {
         log.info("Request received to create order");
         Long userId = ((PrincipalDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
