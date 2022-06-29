@@ -2,6 +2,7 @@ package com.school.kiqa.controller;
 
 import com.school.kiqa.command.dto.auth.CredentialsDto;
 import com.school.kiqa.command.dto.auth.LoginDto;
+import com.school.kiqa.command.dto.auth.PrincipalDto;
 import com.school.kiqa.service.AuthService;
 import com.school.kiqa.util.UuidService;
 import lombok.RequiredArgsConstructor;

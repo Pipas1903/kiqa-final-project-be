@@ -53,7 +53,7 @@ public class UserAuthenticationProvider {
 
         PrincipalDto principalDto = PrincipalDto.builder()
                 .role(UserType.USER)
-                .name("unlogged user")
+                .name("x-session")
                 .id(sessionId)
                 .build();
 
