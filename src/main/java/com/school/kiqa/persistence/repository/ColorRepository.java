@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface ColorRepository extends JpaRepository<ColorEntity, Long> {
 
     Optional<ColorEntity> findByHexValue(String hexValue);
+    Optional<ColorEntity> findByColorName(String colorName);
 }
+

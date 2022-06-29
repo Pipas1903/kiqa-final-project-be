@@ -10,4 +10,10 @@ public interface CategoryService {
     CategoryDetailsDto createCategory(CreateOrUpdateCategoryDto createOrUpdateCategoryDto);
 
     List<CategoryDetailsDto> getAllCategories();
+
+    CategoryDetailsDto getCategoryById(Long categoryId);
+
+    CategoryDetailsDto getCategoryByName(String categoryName);
+
+    CategoryDetailsDto updateCategoryById(Long categoryId, CreateOrUpdateCategoryDto createOrUpdateCategoryDto);
 }

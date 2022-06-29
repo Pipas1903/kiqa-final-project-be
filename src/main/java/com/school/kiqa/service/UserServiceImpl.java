@@ -1,6 +1,5 @@
 package com.school.kiqa.service;
 
-import com.school.kiqa.command.Paginated;
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
@@ -9,20 +8,22 @@ import com.school.kiqa.converter.AddressConverter;
 import com.school.kiqa.converter.UserConverter;
 import com.school.kiqa.enums.UserType;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
+import com.school.kiqa.exception.notFound.UserNotFoundException;
 import com.school.kiqa.persistence.entity.AddressEntity;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.AddressRepository;
 import com.school.kiqa.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.USER_ALREADY_EXISTS;
+import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -49,33 +50,130 @@ public class UserServiceImpl implements UserService {
         user.setUserType(userType);
 
         if (dto.getPhoneNumber() != null) {
+            log.info("setting user phone number");
             user.setPhoneNumber(dto.getPhoneNumber());
-            log.info("Saved user phone number");
+        }
+
+        if (dto.getMainAddress() == null) {
+            log.warn("User did not provide main address, saving with no address");
+            final var savedUser = userRepository.save(user);
+            log.info("Saved new user with id {} to database", savedUser.getId());
+            return userConverter.convertEntityToUserDetailsDto(savedUser);
         }
 
         final var savedUser = userRepository.save(user);
         log.info("Saved new user with id {} to database", savedUser.getId());
 
+        AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(dto.getMainAddress());
+        address.setIsMain(true);
+        address.setUserEntity(savedUser);
+        addressRepository.save(address);
+
+        log.info("Set user main address successfully");
         return userConverter.convertEntityToUserDetailsDto(savedUser);
     }
 
     @Override
     public UserDetailsDto getUserById(Long id) {
-        return null;
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", id);
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, id));
+                });
+
+
+        log.info("returned user with id {} successfully", id);
+        return userConverter.convertEntityToUserDetailsDto(userEntity);
+    }
+
+
+    @Override
+    public List<UserDetailsDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userConverter::convertEntityToUserDetailsDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Paginated<UserDetailsDto> getAllUsers(PageRequest page) {
-        return null;
+    public UserDetailsDto updateUserById(UpdateUserDto updateUserDto, Long id) {
+
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", id);
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, id));
+                });
+
+
+        if (updateUserDto.getName() != null) {
+            log.info("request received to update the name of the user with id {}", id);
+            userEntity.setName(updateUserDto.getName());
+            log.info("name of the user with id {} was successfully updated", id);
+        }
+
+        if (updateUserDto.getDateOfBirth() != null) {
+            log.info("request received to update the date of birth of the user with id {}", id);
+            userEntity.setDateOfBirth(updateUserDto.getDateOfBirth());
+            log.info("date of birth of the user with id {} was successfully updated", id);
+        }
+
+        if (updateUserDto.getPassword()!= null) {
+            log.info("request received to update the password of the user with id {}", id);
+            userEntity.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
+            log.info("password of the user with id {} was successfully updated", id);
+        }
+
+        if (updateUserDto.getVat() != null) {
+            log.info("request received to update the vat of the user with id {}", id);
+            userEntity.setVat(updateUserDto.getVat());
+            log.info("vat of the user with id {} was successfully updated", id);
+        }
+
+        if (updateUserDto.getPhoneNumber() != null) {
+            log.info("request received to update the phone number of the user with id {}", id);
+            userEntity.setPhoneNumber(updateUserDto.getPhoneNumber());
+            log.info("phone number of the user with id {} was successfully updated", id);
+        }
+
+        final var savedUser = userRepository.save(userEntity);
+
+        if (updateUserDto.getAddressList() != null) {
+            log.info("request received to update the address list of the user with id {}", id);
+            List<AddressEntity> addressEntityList =  updateUserDto.getAddressList().stream().map(addressConverter::convertCreateDtoToAddressEntity)
+                    .collect(Collectors.toList());
+
+            addressEntityList.forEach(address -> address.setUserEntity(savedUser));
+
+            final var savedAddressEntityList = addressRepository.saveAll(addressEntityList);
+            userEntity.setAddressEntities(savedAddressEntityList);
+            log.info("address list of the user with id {} was successfully updated", id);
+        }
+
+        log.info("user with id {} was successfully updated", id);
+        return userConverter.convertEntityToUserDetailsDto(userEntity);
     }
 
     @Override
     public UserDetailsDto addAddress(CreateOrUpdateAddressDto addressDto, Long userId) {
-        return null;
-    }
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("user with id {} does not exist", userId);
+                    throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
+                });
 
-    @Override
-    public UserDetailsDto updateUser(UpdateUserDto updateUserDto, Long userId) {
-        return null;
+        final var savedUser = userRepository.save(userEntity);
+        log.info("Saved user with id {} with new address {} to database", savedUser.getId(), addressDto);
+
+        AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(addressDto);
+        addressRepository.save(address);
+        log.info("Saved new address to database");
+
+        List<AddressEntity> addressEntities = new ArrayList<>();
+        addressEntities.addAll(userEntity.getAddressEntities());
+        addressEntities.add(address);
+
+        userEntity.setAddressEntities(addressEntities);
+        log.info("Set user addresses successfully");
+        return userConverter.convertEntityToUserDetailsDto(savedUser);
     }
 }
