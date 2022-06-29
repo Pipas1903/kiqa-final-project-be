@@ -19,11 +19,11 @@ public class AddressConverter {
     }
     public AddressDetailsDto convertEntityToAddressDetailsDto(AddressEntity address){
         return AddressDetailsDto.builder()
-                .cityName(address.getCityName())
+                .city(address.getCityName())
                 .country(address.getCountry())
                 .doorNumber(address.getDoorNumber())
                 .floorNumber(address.getFloorNumber())
-                .streetName(address.getStreetName())
+                .street(address.getStreetName())
                 .zipCode(address.getZipCode())
                 .isMain(address.getIsMain())
                 .build();
