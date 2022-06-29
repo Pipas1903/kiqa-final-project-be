@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 public class CookieFilter extends OncePerRequestFilter {
 
     private final String COOKIE = "cookie_auth";
+    private final String SESSION_COOKIE = "x-session";
     private final UserAuthenticationProvider authenticationProvider;
 
     @Override
@@ -35,11 +36,24 @@ public class CookieFilter extends OncePerRequestFilter {
                         !cookie.getValue().isEmpty())
                 .findFirst();
 
+        Optional<Cookie> sessionCookie = Stream.of(Optional.ofNullable(request.getCookies())
+                        .orElse(new Cookie[0]))
+                .filter(cookie -> SESSION_COOKIE.equals(cookie.getName()) &&
+                        Objects.nonNull(cookie.getValue()) &&
+                        !cookie.getValue().isEmpty())
+                .findFirst();
+
         try {
+            sessionCookie.ifPresent(cookie -> {
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authenticationProvider.validateSession(cookie.getValue()));
+                log.info("Authenticated with session cookie (uuid)");
+            });
+
             authCookie.ifPresent(cookie -> {
                 SecurityContextHolder.getContext()
                         .setAuthentication(authenticationProvider.validateToken(cookie.getValue()));
-                log.info("Authenticated with cookie");
+                log.info("Authenticated with auth cookie");
             });
         } catch (RuntimeException e) {
             SecurityContextHolder.clearContext();

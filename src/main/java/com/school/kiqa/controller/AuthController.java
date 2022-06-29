@@ -3,6 +3,7 @@ package com.school.kiqa.controller;
 import com.school.kiqa.command.dto.auth.CredentialsDto;
 import com.school.kiqa.command.dto.auth.LoginDto;
 import com.school.kiqa.service.AuthService;
+import com.school.kiqa.util.UuidService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -21,7 +24,31 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final UuidService uuidService;
     private final String COOKIE = "cookie_auth";
+    private final String SESSION_COOKIE = "x-session";
+
+    @PostMapping("/session")
+    public ResponseEntity<Void> createSession(@RequestHeader(value = "identifier") String identifier) {
+        log.info("Received request to create session");
+        final var session = uuidService.generateUuid(identifier);
+
+        ResponseCookie cookie = ResponseCookie
+                .from(SESSION_COOKIE, session)
+                .httpOnly(true)
+                .sameSite("None")
+                .secure(true)
+                .maxAge(24 * 60 * 60)
+                .path("/")
+                .build();
+        log.info("Set session cookie");
+
+        log.info("User without login has now a session");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
+    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginDto> login(@Valid @RequestBody CredentialsDto credentials) {
