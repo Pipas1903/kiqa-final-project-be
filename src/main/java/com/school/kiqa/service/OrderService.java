@@ -6,18 +6,18 @@ import com.school.kiqa.command.dto.orderProduct.CreateOrUpdateOrderProductDto;
 
 public interface OrderService {
 
-    OrderDetailsDto addProductToOrder(CreateOrUpdateOrderProductDto orderProductDto, Long orderId);
+    OrderDetailsDto addProductToOrder(CreateOrUpdateOrderProductDto orderProductDto, Long orderId, Long userId);
 
-    OrderDetailsDto createOrder(CreateOrUpdateOrderDto orderDto);
+    OrderDetailsDto createOrder(CreateOrUpdateOrderDto orderDto, Long userId);
 
-    OrderDetailsDto updateProductQuantity(Long orderProductId, Long orderId, int quantity);
+    OrderDetailsDto updateProductQuantity(Long orderProductId, Long orderId, int quantity, Long userId);
 
-    OrderDetailsDto removeProductFromOrder(Long orderProductId, Long orderId);
+    OrderDetailsDto removeProductFromOrder(Long orderProductId, Long orderId, Long userId);
 
-    OrderDetailsDto incrementProductQuantity(Long orderProductId, Long orderId);
+    OrderDetailsDto incrementProductQuantity(Long orderProductId, Long orderId, Long userId);
 
     // order/{}/decrement/{}
-    OrderDetailsDto decrementProductQuantity(Long orderProductId, Long orderId);
+    OrderDetailsDto decrementProductQuantity(Long orderProductId, Long orderId, Long userId);
 
-    OrderDetailsDto finishOrder(Long orderId);
+    OrderDetailsDto finishOrder(Long orderId, Long userId);
 }

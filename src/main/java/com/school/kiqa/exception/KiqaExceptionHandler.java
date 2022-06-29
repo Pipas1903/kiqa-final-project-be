@@ -3,7 +3,16 @@ package com.school.kiqa.exception;
 import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
 import com.school.kiqa.exception.alreadyExists.ColorAlreadyExistsException;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
-import com.school.kiqa.exception.notFound.*;
+import com.school.kiqa.exception.notFound.BrandNotFoundException;
+import com.school.kiqa.exception.notFound.CategoryNotFoundException;
+import com.school.kiqa.exception.notFound.ColorNotFoundException;
+import com.school.kiqa.exception.notFound.OrderNotFoundException;
+import com.school.kiqa.exception.notFound.OrderProductNotFoundException;
+import com.school.kiqa.exception.notFound.ProductNotFoundException;
+import com.school.kiqa.exception.notFound.ProductTypeNotFoundException;
+import com.school.kiqa.exception.notFound.ResultsNotFoundException;
+import com.school.kiqa.exception.notFound.SessionNotFoundException;
+import com.school.kiqa.exception.notFound.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +41,10 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                     BrandNotFoundException.class,
                     ProductTypeNotFoundException.class,
                     UserNotFoundException.class,
-                    ResultsNotFoundException.class
+                    ResultsNotFoundException.class,
+                    OrderNotFoundException.class,
+                    OrderProductNotFoundException.class,
+                    SessionNotFoundException.class
             }
     )
     public ResponseEntity<KiqaError> handleNotFoundException(Exception ex, HttpServletRequest req) {
@@ -66,7 +78,8 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(
             value = {
-                    WrongCredentialsException.class
+                    WrongCredentialsException.class,
+                    InvalidHeaderException.class
             }
             )
     public ResponseEntity<KiqaError> handleWrongCredentialsException(Exception ex, HttpServletRequest req) {

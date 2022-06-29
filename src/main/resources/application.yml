@@ -28,3 +28,5 @@ kiqa:
     expiration: ${JWT_EXPIRATION}
   bcrypt:
     salt: ${BCRYPT_SALT}
+  uuid:
+    value: ${UUID}

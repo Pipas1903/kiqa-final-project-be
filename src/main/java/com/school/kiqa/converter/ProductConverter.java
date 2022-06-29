@@ -5,7 +5,6 @@ import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -33,9 +32,6 @@ public class ProductConverter {
                 .categoryName(product.getCategoryEntity().getName())
                 .productTypeName(product.getProductTypeEntity().getName())
                 .price(product.getPrice())
-                .colors(product.getColors().stream()
-                        .map(converter::convertEntityToColorDetailsDto)
-                        .collect(Collectors.toList()))
                 .build();
     }
 }

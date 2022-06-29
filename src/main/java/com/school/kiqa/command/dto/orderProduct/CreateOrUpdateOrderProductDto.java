@@ -15,4 +15,5 @@ public class CreateOrUpdateOrderProductDto {
     private Integer quantity;
     private Long productId;
     private Long orderId;
+    private Long colorId;
 }
