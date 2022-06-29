@@ -53,20 +53,25 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     @PreAuthorize("@authorized.isUser(#id)")
-    public ResponseEntity<UserDetailsDto> updateUserById(@PathVariable Long id,
-                                                         @RequestBody UpdateUserDto updateUserDto) {
+    public ResponseEntity<UserDetailsDto> updateUserById(
+            @PathVariable Long id,
+            @RequestBody UpdateUserDto updateUserDto) {
         log.info("Request received to update user with id {}", id);
         final var user = userService.updateUserById(updateUserDto, id);
         log.info("Returned updated user with id {}", id);
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/users/{id}/address")
+    @PostMapping("/users/{userId}/address")
     @PreAuthorize("@authorized.isUser(#userId)")
-    public ResponseEntity<UserDetailsDto> addAddress(@RequestBody CreateOrUpdateAddressDto addressDto, @PathVariable Long userId) {
+    public ResponseEntity<UserDetailsDto> addAddress(
+            @RequestBody CreateOrUpdateAddressDto addressDto,
+            @PathVariable Long userId
+    ) {
         log.info("Request received to add address {} to the user with id {}", addressDto, userId);
         final var user = userService.addAddress(addressDto, userId);
         log.info("Returning user with an added address");
         return ResponseEntity.ok(user);
     }
+
 }

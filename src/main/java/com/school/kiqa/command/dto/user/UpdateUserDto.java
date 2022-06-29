@@ -26,9 +26,6 @@ public class UpdateUserDto {
 
     private LocalDate dateOfBirth;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "password doesn't match the requirements")
-    private String password;
 
     private Integer vat;
 

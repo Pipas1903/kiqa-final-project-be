@@ -109,12 +109,6 @@ public class UserServiceImpl implements UserService {
             log.info("date of birth of the user with id {} was successfully updated", id);
         }
 
-        if (updateUserDto.getPassword() != null) {
-            log.info("request received to update the password of the user with id {}", id);
-            userEntity.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
-            log.info("password of the user with id {} was successfully updated", id);
-        }
-
         if (updateUserDto.getVat() != null) {
             log.info("request received to update the vat of the user with id {}", id);
             userEntity.setVat(updateUserDto.getVat());

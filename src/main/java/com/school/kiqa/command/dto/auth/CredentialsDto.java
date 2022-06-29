@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class CredentialsDto {
 
-    @Email
     private String email;
 
     @NotNull
