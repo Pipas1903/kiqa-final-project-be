@@ -2,11 +2,22 @@ package kiqa;
 
 import com.school.kiqa.command.dto.address.AddressDetailsDto;
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
+import com.school.kiqa.command.dto.order.CreateOrUpdateOrderDto;
+import com.school.kiqa.command.dto.order.OrderDetailsDto;
+import com.school.kiqa.command.dto.orderProduct.CreateOrUpdateOrderProductDto;
+import com.school.kiqa.command.dto.orderProduct.OrderProductDetailsDto;
+import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
 import com.school.kiqa.converter.AddressConverter;
+import com.school.kiqa.converter.BrandConverter;
+import com.school.kiqa.converter.CategoryConverter;
+import com.school.kiqa.converter.ColorConverter;
 import com.school.kiqa.converter.OrderConverter;
+import com.school.kiqa.converter.OrderProductConverter;
+import com.school.kiqa.converter.ProductConverter;
+import com.school.kiqa.converter.UserConverter;
 import com.school.kiqa.enums.UserType;
 import com.school.kiqa.persistence.entity.AddressEntity;
 import com.school.kiqa.persistence.entity.BrandEntity;
@@ -24,10 +35,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /*
+
 public class MockedData {
 
     private static AddressConverter addressConverter;
+    private static BrandConverter brandConverter;
+    private static CategoryConverter categoryConverter;
+    private static ColorConverter colorConverter;
     private static OrderConverter orderConverter;
+    private static OrderProductConverter orderProductConverter;
+    private static ProductConverter productConverter;
+
+    private static UserConverter userConverter;
 
     // USER
 
@@ -45,8 +64,8 @@ public class MockedData {
                 .vat(674565)
                 .phoneNumber("4567888")
                 .userType(UserType.USER)
-                .addressEntities(Collections.singletonList())
-                .orderEntityList()
+                .addressEntities(getAddressEntityList())
+                .orderEntityList(getOrderEntityList())
                 .build();
     }
 
@@ -133,14 +152,13 @@ public class MockedData {
 
     public static AddressDetailsDto getAddressDetailsDto(AddressEntity addressEntity) {
         return AddressDetailsDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .dateOfBirth(entity.getDateOfBirth())
-                .vat(entity.getVat())
-                .phoneNumber(entity.getPhoneNumber())
-                .addressList(entity.getAddressEntities().stream().map(addressConverter::convertEntityToAddressDetailsDto).collect(Collectors.toList()))
-                .orderHistory(entity.getOrderEntityList().stream().map(orderConverter::convertEntityToOrderDetailsDto).collect(Collectors.toList()))
-                .email(entity.getEmail())
+                .id(addressEntity.getId())
+                .country(addressEntity.getCountry())
+                .doorNumber(addressEntity.getDoorNumber())
+                .floorNumber(addressEntity.getFloorNumber())
+                .streetName(addressEntity.getStreetName())
+                .zipCode(addressEntity.getZipCode())
+                .isMain(addressEntity.getIsMain())
                 .build();
     }
 
@@ -152,14 +170,35 @@ public class MockedData {
                 .totalPrice(50D)
                 .status(true)
                 .creationDate(LocalDate.of(2000, 5, 20))
-                .orderProductEntityList(Collections.singletonList())
-                .userEntity()
-                .sendingAddress()
+                .orderProductEntityList(getOrderProductEntityList())
+                .userEntity(getMockedUserEntity())
+                .sendingAddress(getMockedAddressEntity())
                 .build();
     }
 
-    public static List<OrderEntity> getAOrderEntityList() {
+    public static List<OrderEntity> getOrderEntityList() {
         return Collections.singletonList(getMockedOrderEntity());
+    }
+
+
+    public static CreateOrUpdateOrderDto getCreateOrUpdateOrderDto() {
+        return CreateOrUpdateOrderDto.builder()
+                .userId(4L)
+                .addressDto(getCreateOrUpdateAddressDto())
+                .productDtos(Collections.singletonList(getCreateOrUpdateOrderProductDto()))
+                .build();
+    }
+
+    public static OrderDetailsDto getOrderDetailsDto(OrderEntity orderEntity) {
+        return OrderDetailsDto.builder()
+                .id(orderEntity.getId())
+                .totalPrice(orderEntity.getTotalPrice())
+                .status(orderEntity.getStatus())
+                .creationDate(orderEntity.getCreationDate())
+                .orderProductDetailsDtoList(getOrderProductEntityList().stream().map(orderProductConverter::convertEntityToOrderProductDetailsDto).collect(Collectors.toList()))
+                .userId(orderEntity.getUserEntity().getId())
+                .addressDetailsDto(getAddressDetailsDto(getMockedAddressEntity()))
+                .build();
     }
 
 
@@ -169,16 +208,37 @@ public class MockedData {
         return OrderProductEntity.builder()
                 .id(7L)
                 .quantity(3)
-                .product()
-                .color()
-                .isActive()
-                .orderEntity()
+                .product(getMockedProductEntity())
+                .color(getMockedColorEntity())
+                .isActive(true)
+                .orderEntity(getMockedOrderEntity())
                 .build();
     }
 
     public static List<OrderProductEntity> getOrderProductEntityList() {
         return Collections.singletonList(getMockedOrderProductEntity());
     }
+
+
+    public static CreateOrUpdateOrderProductDto getCreateOrUpdateOrderProductDto() {
+        return CreateOrUpdateOrderProductDto.builder()
+                .quantity(2)
+                .productId(getMockedProductEntity().getId())
+                .orderId(getMockedOrderEntity().getId())
+                .colorId(getMockedColorEntity().getId())
+                .build();
+    }
+
+    public static OrderProductDetailsDto getOrderProductDetailsDto(OrderProductEntity orderProductEntity) {
+        return OrderProductDetailsDto.builder()
+                .id(orderProductEntity)
+                .quantity(orderProductEntity.getQuantity())
+                .productId(getMockedProductEntity().getId())
+                .orderId(getMockedOrderEntity().getId())
+                .colorId(getMockedColorEntity().getId())
+                .build();
+    }
+
 
     // PRODUCT
 
@@ -191,14 +251,39 @@ public class MockedData {
                 .isActive(true)
                 .image("imagemDoJoao")
                 .brandEntity(getMockedBrandEntity())
-                .productTypeEntity()
-                .categoryEntity()
+                .productTypeEntity(getMockedProductTypeEntity())
+                .categoryEntity(getMockedCategoryEntity())
                 .colors()
                 .build();
     }
 
     public static List<ProductEntity> getProductEntityList() {
         return Collections.singletonList(getMockedProductEntity());
+    }
+
+
+    public static CreateOrUpdateProductDto getCreateOrUpdateProductDto() {
+        return CreateOrUpdateProductDto.builder()
+                .brand(getMockedBrandEntity().getName())
+                .categoryName(getMockedCategoryEntity().getName())
+                .colors(Collections.singletonList(getCreateOrUpdateColorDto()))
+                .description("I dont know")
+                .image("youwannaseeme")
+                .isActive(false)
+                .name("nexnopo")
+                .price(34)
+                .productTypeName()
+                .build();
+    }
+
+    public static OrderProductDetailsDto getOrderProductDetailsDto(OrderProductEntity orderProductEntity) {
+        return OrderProductDetailsDto.builder()
+                .id(orderProductEntity)
+                .quantity(orderProductEntity.getQuantity())
+                .productId(getMockedProductEntity().getId())
+                .orderId(getMockedOrderEntity().getId())
+                .colorId(getMockedColorEntity().getId())
+                .build();
     }
 
 
