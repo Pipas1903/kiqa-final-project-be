@@ -23,5 +23,7 @@ public interface UserService {
 
     UserDetailsDto addAddress(CreateOrUpdateAddressDto addressDto, Long userId);
 
+    UserDetailsDto removeAddress(Long addressId, Long userId);
+
     UserDetailsDto updatePassword(ChangePasswordDto changePassword, Long userId);
 }

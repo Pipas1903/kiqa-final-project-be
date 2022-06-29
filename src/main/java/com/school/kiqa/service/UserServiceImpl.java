@@ -142,7 +142,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
     @Override
     public UserDetailsDto addAddress(CreateOrUpdateAddressDto addressDto, Long userId) {
         UserEntity userEntity = userRepository.findById(userId)
@@ -164,6 +163,11 @@ public class UserServiceImpl implements UserService {
         userEntity.setAddressEntities(addressEntities);
         log.info("Set user addresses successfully");
         return userConverter.convertEntityToUserDetailsDto(savedUser);
+    }
+
+    @Override
+    public UserDetailsDto removeAddress(Long addressId, Long userId) {
+        return null;
     }
 
     @Override
