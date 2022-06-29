@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
 
-    Optional<SessionEntity> findByUuid(String uuid);
+    Optional<SessionEntity> findByUuid(String tokenUuid);
 }
