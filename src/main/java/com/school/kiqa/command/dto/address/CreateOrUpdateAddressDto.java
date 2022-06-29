@@ -18,4 +18,5 @@ public class CreateOrUpdateAddressDto {
     private String floorNumber;
     private String streetName;
     private String zipCode;
+    private boolean isMain;
 }

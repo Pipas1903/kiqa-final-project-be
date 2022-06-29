@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AddressConverter {
-    public AddressEntity convertCreateDtoToAddressEntity(CreateOrUpdateAddressDto addressDto){
+    public AddressEntity convertCreateDtoToAddressEntity(CreateOrUpdateAddressDto addressDto) {
         return AddressEntity.builder()
                 .cityName(addressDto.getCityName())
                 .country(addressDto.getCountry())
@@ -15,9 +15,11 @@ public class AddressConverter {
                 .floorNumber(addressDto.getFloorNumber())
                 .streetName(addressDto.getStreetName())
                 .zipCode(addressDto.getZipCode())
+                .isMain(addressDto.isMain())
                 .build();
     }
-    public AddressDetailsDto convertEntityToAddressDetailsDto(AddressEntity address){
+
+    public AddressDetailsDto convertEntityToAddressDetailsDto(AddressEntity address) {
         return AddressDetailsDto.builder()
                 .city(address.getCityName())
                 .country(address.getCountry())

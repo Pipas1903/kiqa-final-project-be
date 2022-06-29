@@ -9,7 +9,7 @@ import com.school.kiqa.converter.AddressConverter;
 import com.school.kiqa.converter.OrderConverter;
 import com.school.kiqa.converter.UserConverter;
 import com.school.kiqa.enums.UserType;
-import com.school.kiqa.exception.PasswordMismatchException;
+import com.school.kiqa.exception.alreadyExists.PasswordMismatchException;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
 import com.school.kiqa.exception.notFound.UserNotFoundException;
 import com.school.kiqa.persistence.entity.AddressEntity;
@@ -74,9 +74,8 @@ public class UserServiceImpl implements UserService {
                     throw new UserNotFoundException(String.format(USER_NOT_FOUND, id));
                 });
 
-
         log.info("returned user with id {} successfully", id);
-        return userConverter.convertEntityToUserDetailsDto(userEntity);
+        return addConvertedLists(userEntity);
     }
 
     @Override
@@ -154,15 +153,11 @@ public class UserServiceImpl implements UserService {
         log.info("Saved user with id {} with new address {} to database", savedUser.getId(), addressDto);
 
         AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(addressDto);
+        address.setUserEntity(userEntity);
         addressRepository.save(address);
         log.info("Saved new address to database");
 
-        List<AddressEntity> addressEntities = new ArrayList<>(userEntity.getAddressEntities());
-        addressEntities.add(address);
-
-        userEntity.setAddressEntities(addressEntities);
-        log.info("Set user addresses successfully");
-        return userConverter.convertEntityToUserDetailsDto(savedUser);
+        return addConvertedLists(userEntity);
     }
 
     @Override
