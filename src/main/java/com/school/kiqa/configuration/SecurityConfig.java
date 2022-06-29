@@ -5,6 +5,7 @@ import com.school.kiqa.security.UserAuthenticationEntryPoint;
 import com.school.kiqa.security.UserAuthenticationProvider;
 import com.school.kiqa.security.filters.CookieFilter;
 import com.school.kiqa.security.filters.JwtFilter;
+import com.school.kiqa.security.filters.SessionFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(new JwtFilter(authenticationProvider), BasicAuthenticationFilter.class)
                 .addFilterBefore(new CookieFilter(authenticationProvider), JwtFilter.class)
+                .addFilterBefore(new SessionFilter(authenticationProvider), CookieFilter.class)
                 .csrf()
                 .disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -61,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 )
                 .permitAll()
-                .antMatchers(HttpMethod.POST, "/login", "/users")
+                .antMatchers(HttpMethod.POST, "/login", "/users", "/session")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

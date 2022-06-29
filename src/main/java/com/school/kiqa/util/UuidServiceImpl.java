@@ -27,6 +27,7 @@ public class UuidServiceImpl implements UuidService {
 
         if (!uuidProperties.getValue().equals(identifier)) {
             log.error("Given identifier - {} - doesn't match required one", identifier);
+            log.info(uuidProperties.getValue());
             throw new InvalidHeaderException(INVALID_HEADER);
         }
 
