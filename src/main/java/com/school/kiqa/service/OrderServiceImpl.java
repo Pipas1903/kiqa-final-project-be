@@ -423,8 +423,8 @@ public class OrderServiceImpl implements OrderService {
         orderProduct.setProduct(product);
         log.info("Product respective to OrderProduct set to {}", product.getId());
 
-        orderProduct.setIsActive(product.getIsActive());
-        log.info("OrderProduct active status set to '{}'", product.getIsActive());
+        orderProduct.setActive(product.isActive());
+        log.info("OrderProduct active status set to '{}'", product.isActive());
 
         if (orderProductDto.getColorId() != 0) {
             ColorEntity color = colorRepository.findById(orderProductDto.getColorId())
