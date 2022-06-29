@@ -23,9 +23,15 @@ public class OrderController {
     @PreAuthorize("@authorized.hasRole('USER')")
     public ResponseEntity<OrderDetailsDto> createOrder(@RequestBody CreateOrUpdateOrderDto createOrUpdateOrderDto) {
         log.info("Request received to create order");
-        Long userId = ((PrincipalDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        final OrderDetailsDto orderDetailsDto = orderService.createOrder(createOrUpdateOrderDto, userId);
-        log.info("Returning created order");
+        PrincipalDto user = ((PrincipalDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        log.info(user.getName());
+        if (user.getName().equals("x-session")) {
+            final OrderDetailsDto orderDetailsDto = orderService.createOrderNoLogin(createOrUpdateOrderDto, user.getId());
+            log.info("Returning created order - session");
+            return ResponseEntity.ok(orderDetailsDto);
+        }
+        final OrderDetailsDto orderDetailsDto = orderService.createOrder(createOrUpdateOrderDto, user.getId());
+        log.info("Returning created order for user {}", user.getId());
         return ResponseEntity.ok(orderDetailsDto);
     }
 }

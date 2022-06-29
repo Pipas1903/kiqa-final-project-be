@@ -2,7 +2,11 @@ package com.school.kiqa.exception;
 
 import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
 import com.school.kiqa.exception.alreadyExists.ColorAlreadyExistsException;
+import com.school.kiqa.exception.alreadyExists.PasswordMismatchException;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
+import com.school.kiqa.exception.authExceptions.InvalidHeaderException;
+import com.school.kiqa.exception.authExceptions.WrongCredentialsException;
+import com.school.kiqa.exception.notFound.AddressNotFound;
 import com.school.kiqa.exception.notFound.BrandNotFoundException;
 import com.school.kiqa.exception.notFound.CategoryNotFoundException;
 import com.school.kiqa.exception.notFound.ColorNotFoundException;
@@ -44,7 +48,8 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                     ResultsNotFoundException.class,
                     OrderNotFoundException.class,
                     OrderProductNotFoundException.class,
-                    SessionNotFoundException.class
+                    SessionNotFoundException.class,
+                    AddressNotFound.class
             }
     )
     public ResponseEntity<KiqaError> handleNotFoundException(Exception ex, HttpServletRequest req) {
@@ -65,7 +70,7 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                     UserAlreadyExistsException.class,
                     PasswordMismatchException.class
             }
-            )
+    )
     public ResponseEntity<KiqaError> handleAlreadyExistsException(Exception ex, HttpServletRequest req) {
         KiqaError error = KiqaError.builder()
                 .message(ex.getMessage())
@@ -82,7 +87,7 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                     WrongCredentialsException.class,
                     InvalidHeaderException.class
             }
-            )
+    )
     public ResponseEntity<KiqaError> handleWrongCredentialsException(Exception ex, HttpServletRequest req) {
         KiqaError error = KiqaError.builder()
                 .message(ex.getMessage())
