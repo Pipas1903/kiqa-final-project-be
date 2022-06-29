@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class AddressDetailsDto {
+    private Long id;
     private String cityName;
     private String country;
     private String doorNumber;

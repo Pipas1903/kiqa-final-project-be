@@ -19,6 +19,7 @@ public class AddressConverter {
     }
     public AddressDetailsDto convertEntityToAddressDetailsDto(AddressEntity address){
         return AddressDetailsDto.builder()
+                .id(address.getId())
                 .cityName(address.getCityName())
                 .country(address.getCountry())
                 .doorNumber(address.getDoorNumber())
