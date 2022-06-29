@@ -1,6 +1,7 @@
 package com.school.kiqa.controller;
 
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
+import com.school.kiqa.command.dto.user.ChangePasswordDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -71,6 +73,17 @@ public class UserController {
         log.info("Request received to add address {} to the user with id {}", addressDto, userId);
         final var user = userService.addAddress(addressDto, userId);
         log.info("Returning user with an added address");
+        return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping("/users/{userId}/password")
+    @PreAuthorize("@authorized.isUser(#userId)")
+    public ResponseEntity<UserDetailsDto> updatePassword(
+            @RequestBody ChangePasswordDto changePasswordDto,
+            @PathVariable Long userId) {
+        log.info("Request received to change password of user with id {}", userId);
+        final var user = userService.updatePassword(changePasswordDto, userId);
+        log.info("Returning user");
         return ResponseEntity.ok(user);
     }
 
