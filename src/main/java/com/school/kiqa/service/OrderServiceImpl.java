@@ -375,7 +375,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailsDto finishOrder(Long orderId, Long userId) {
-        UserEntity userEntity = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.warn("user with id {} does not exist", userId);
                     throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
@@ -393,7 +393,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailsDto finishOrderNoLogin(Long orderId, Long sessionId) {
-        SessionEntity sessionEntity = sessionRepository.findById(sessionId)
+        sessionRepository.findById(sessionId)
                 .orElseThrow(() -> {
                     log.warn(String.format(SESSION_NOT_FOUND, sessionId));
                     throw new SessionNotFoundException(String.format(SESSION_NOT_FOUND, sessionId));
