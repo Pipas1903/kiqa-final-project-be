@@ -35,24 +35,25 @@ import com.school.kiqa.persistence.entity.OrderProductEntity;
 import com.school.kiqa.persistence.entity.ProductEntity;
 import com.school.kiqa.persistence.entity.ProductTypeEntity;
 import com.school.kiqa.persistence.entity.UserEntity;
+import com.school.kiqa.service.AuthServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.h2.engine.User;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class MockedData {
 
-    private static AddressConverter addressConverter;
-    private static BrandConverter brandConverter;
-    private static CategoryConverter categoryConverter;
-    private static ColorConverter colorConverter;
-    private static OrderConverter orderConverter;
-    private static OrderProductConverter orderProductConverter;
-    private static ProductConverter productConverter;
-
-    private static UserConverter userConverter;
+    private static AddressConverter addressConverter = new AddressConverter();
+    private static BrandConverter brandConverter = new BrandConverter();
+    private static CategoryConverter categoryConverter = new CategoryConverter();
+    private static ColorConverter colorConverter = new ColorConverter();
+    private static OrderConverter orderConverter = new OrderConverter();
+    private static OrderProductConverter orderProductConverter = new OrderProductConverter();
+    private static ProductConverter productConverter = new ProductConverter(colorConverter);
+    private static UserConverter userConverter = new UserConverter(addressConverter);
 
     // USER
 
@@ -63,13 +64,24 @@ public class MockedData {
     public static UserEntity getMockedUserEntity() {
         return UserEntity.builder()
                 .id(5L)
-                .name("Filipo")
+                .name("Rafa")
                 .password("P@ssword123")
-                .email("nasco@email.com")
-                .dateOfBirth(LocalDate.of(1996, 3, 10))
-                .vat(674565)
-                .phoneNumber("4567888")
+                .email("email@email.com")
+                .vat(222222222)
+                .phoneNumber("912456789")
                 .userType(UserType.USER)
+                .build();
+    }
+
+    public static UserEntity getMockedAdmin() {
+        return UserEntity.builder()
+                .id(5L)
+                .name("Rafa")
+                .password("P@ssword123")
+                .email("email@email.com")
+                .vat(222222222)
+                .phoneNumber("912456789")
+                .userType(UserType.ADMIN)
                 .build();
     }
 
@@ -92,7 +104,7 @@ public class MockedData {
                 .password("P@ssword123")
                 .email("email@email.com")
                 .dateOfBirth(LocalDate.of(2000, 8, 30))
-                .vat(2222)
+                .vat(222222222)
                 .phoneNumber("912456789")
                 .build();
     }
@@ -102,7 +114,7 @@ public class MockedData {
         return UpdateUserDto.builder()
                 .name("ricas")
                 .dateOfBirth(LocalDate.of(1990, 12, 3))
-                .vat(2222)
+                .vat(222222222)
                 .phoneNumber("12345949")
                 .addressList(Collections.singletonList(getCreateOrUpdateAddressDto2()))
                 .build();
@@ -357,7 +369,7 @@ public class MockedData {
                 .build();
     }
 
-        public static CategoryDetailsDto getCategoryDetailsDto(CategoryEntity categoryEntity) {
+    public static CategoryDetailsDto getCategoryDetailsDto(CategoryEntity categoryEntity) {
         return CategoryDetailsDto.builder()
                 .id(categoryEntity.getId())
                 .name(categoryEntity.getName())
