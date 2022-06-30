@@ -79,20 +79,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         log.info("Retrieved order from database");
-        final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
-        final var orderProductDetails = orderEntity.getOrderProductEntityList().stream()
-                .map(orderProductEntity -> {
-                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
-                    if (orderProductEntity.getColor() != null)
-                        converted.setColorId(orderProductEntity.getColor().getId());
-                    converted.setOrderId(orderEntity.getId());
-                    return converted;
-                })
-                .collect(Collectors.toList());
-        order.setOrderProductDetailsDtoList(orderProductDetails);
-        order.setAddressDetailsDto(addressConverter
-                .convertEntityToAddressDetailsDto(orderEntity.getSendingAddress()));
-
+        final var order = putLists(orderEntity);
+        order.setUserId(userId);
         log.info("Converted order to order details {}", order.getId());
         return order;
     }
@@ -126,7 +114,8 @@ public class OrderServiceImpl implements OrderService {
     public OrderDetailsDto addProductToOrder(
             CreateOrUpdateOrderProductDto orderProductDto,
             Long orderId,
-            Long userId) {
+            Long userId
+    ) {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> {
                     log.error(String.format(ORDER_NOT_FOUND, orderId));
@@ -290,6 +279,7 @@ public class OrderServiceImpl implements OrderService {
                     throw new UserNotFoundException(String.format(USER_NOT_FOUND, userId));
                 });
 
+        //TODO: UPDATE THIS
         orderEntity.getOrderProductEntityList().remove(orderProductId);
         final var savedOrder = orderRepository.save(orderEntity);
         savedOrder.setUserEntity(userEntity);
@@ -318,6 +308,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderProductEntity.setQuantity(orderProductEntity.getQuantity() + 1);
 
+        //TODO: UPDATE THIS
         final var savedOrder = orderRepository.save(orderEntity);
         savedOrder.setUserEntity(userEntity);
         return orderConverter.convertEntityToOrderDetailsDto(savedOrder);
@@ -346,6 +337,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderProductEntity.setQuantity(orderProductEntity.getQuantity() - 1);
 
+        //TODO: UPDATE THIS
         final var savedOrder = orderRepository.save(orderEntity);
         savedOrder.setUserEntity(userEntity);
         return orderConverter.convertEntityToOrderDetailsDto(savedOrder);
