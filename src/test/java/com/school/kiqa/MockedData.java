@@ -80,8 +80,8 @@ public class MockedData {
                 .dateOfBirth(entity.getDateOfBirth())
                 .vat(entity.getVat())
                 .phoneNumber(entity.getPhoneNumber())
-                .addressList(entity.getAddressEntities().stream().map(addressConverter::convertEntityToAddressDetailsDto).collect(Collectors.toList()))
-                .orderHistory(entity.getOrderEntityList().stream().map(orderConverter::convertEntityToOrderDetailsDto).collect(Collectors.toList()))
+                .addressList(getAddressEntityList().stream().map(addressConverter::convertEntityToAddressDetailsDto).collect(Collectors.toList()))
+                .orderHistory(getOrderEntityList().stream().map(orderConverter::convertEntityToOrderDetailsDto).collect(Collectors.toList()))
                 .email(entity.getEmail())
                 .build();
     }
@@ -97,7 +97,7 @@ public class MockedData {
                 .build();
     }
 
-/**
+
     public static UpdateUserDto getUpdateUserDto() {
         return UpdateUserDto.builder()
                 .name("ricas")
@@ -142,8 +142,7 @@ public class MockedData {
                 .cityName("Minime")
                 .country("Portugal")
                 .isMain(true)
-                //.userEntity(getMockedUserEntity())
-                //.orders(getOrderEntityList())
+                .userEntity(getMockedUserEntity())
                 .build();
     }
 
@@ -172,7 +171,6 @@ public class MockedData {
                 .totalPrice(50D)
                 .status(true)
                 .creationDate(LocalDate.of(2000, 5, 20))
-                .orderProductEntityList(getOrderProductEntityList())
                 .userEntity(getMockedUserEntity())
                 .sendingAddress(getMockedAddressEntity())
                 .build();
@@ -255,7 +253,6 @@ public class MockedData {
                 .brandEntity(getMockedBrandEntity())
                 .productTypeEntity(getMockedProductTypeEntity())
                 .categoryEntity(getMockedCategoryEntity())
-                .colors(getColorEntityList())
                 .build();
     }
 
@@ -301,7 +298,6 @@ public class MockedData {
                 .id(8L)
                 .name("joaoBrand")
                 .imageLink("joaoLink")
-                .productEntityList(Collections.singletonList(getMockedProductEntity()))
                 .build();
     }
 
@@ -332,7 +328,6 @@ public class MockedData {
         return ProductTypeEntity.builder()
                 .id(6L)
                 .name("nevermind")
-                .productEntityList(Collections.singletonList(getMockedProductEntity()))
                 .category(getMockedCategoryEntity())
                 .build();
     }
@@ -348,8 +343,6 @@ public class MockedData {
         return CategoryEntity.builder()
                 .id(2L)
                 .name("lips")
-                .productEntityList(Collections.singletonList(getMockedProductEntity()))
-                .productTypeEntities(Collections.singletonList(getMockedProductTypeEntity()))
                 .build();
     }
 
@@ -378,8 +371,6 @@ public class MockedData {
                 .id(5L)
                 .hexValue("#3456")
                 .colorName("blue")
-                .productEntityList(Collections.singletonList(getMockedProductEntity()))
-                .orderProductEntityList(getOrderProductEntityList())
                 .build();
     }
 
@@ -402,5 +393,5 @@ public class MockedData {
                 .hexValue(colorEntity.getHexValue())
                 .build();
     }
-*/
+
 }
