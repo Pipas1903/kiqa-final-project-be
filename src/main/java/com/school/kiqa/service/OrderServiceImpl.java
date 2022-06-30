@@ -86,7 +86,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailsDto getOrderDetailsNoLogin(Long sessionId, Long orderId) {
-        return null;
+        SessionEntity userEntity = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> {
+                    log.error(String.format(SESSION_NOT_FOUND, sessionId));
+                    return new SessionNotFoundException(String.format(USER_NOT_FOUND, sessionId));
+                });
+
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.error(String.format(ORDER_NOT_FOUND, orderId));
+                    return new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
+                });
+
+        if (!Objects.equals(orderEntity.getUserEntity().getId(), userEntity.getId())) {
+            log.info(String.format(INVALID_ORDER_ID_SESSION, orderId, sessionId));
+            throw new OrderNotFoundException(String.format(INVALID_ORDER_ID_SESSION, orderId, sessionId));
+        }
+
+        log.info("Retrieved order from database");
+        final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        log.info("Converted order to order details {}", order.getId());
+        return order;
     }
 
     @Override
@@ -152,8 +172,12 @@ public class OrderServiceImpl implements OrderService {
             AddressEntity address = addressConverter.convertCreateDtoToAddressEntity(orderDto.getAddressDto());
             address.setUserEntity(userEntity);
             addressRepository.save(address);
+            orderEntity.setSendingAddress(address);
             log.info("saved new address for user with id {}", userEntity.getId());
         }
+
+        orderEntity.setUserEntity(userEntity);
+        log.info("user set for order");
 
         orderEntity.setCreationDate(LocalDate.now());
         log.info("creation date set");
@@ -161,43 +185,10 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setStatus(true);
         log.info("open status set to 'true'");
 
-        List<OrderProductEntity> orderProductEntityList = orderDto.getProductDtos().stream()
-                .map(this::createOrderProduct)
-                .collect(Collectors.toList());
-        log.info("Created orderProductEntity list");
-
-        orderEntity.setOrderProductEntityList(orderProductEntityList);
-        log.info("set orderProductEntity list");
-
-        orderEntity.setTotalPrice(orderProductEntityList.stream()
-                .map(orderProductEntity -> orderProductEntity.getProduct().getPrice() * orderProductEntity.getQuantity())
-                .mapToDouble(Double::doubleValue)
-                .sum()
-        );
-        log.info("set total price to {} €", orderEntity.getTotalPrice());
-
-        final OrderEntity savedOrder = orderRepository.save(orderEntity);
-        log.info("Saved order to database with id {}", savedOrder.getId());
-
-        orderProductEntityList.forEach(orderProduct -> orderProduct.setOrderEntity(savedOrder));
-        orderProductRepository.saveAll(orderProductEntityList);
-
-        OrderDetailsDto orderDetailsDto = orderConverter.convertEntityToOrderDetailsDto(savedOrder);
-        orderDetailsDto.setAddressDetailsDto(addressConverter.convertEntityToAddressDetailsDto(savedOrder.getSendingAddress()));
-
-        final var orderProductDetails = savedOrder.getOrderProductEntityList().stream()
-                .map(orderProductEntity -> {
-                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
-                    if (orderProductEntity.getColor() != null)
-                        converted.setColorId(orderProductEntity.getColor().getId());
-                    converted.setOrderId(savedOrder.getId());
-                    return converted;
-                })
-                .collect(Collectors.toList());
-        orderDetailsDto.setOrderProductDetailsDtoList(orderProductDetails);
-        orderDetailsDto.setUserId(userEntity.getId());
-        log.info("retrieving details of the order");
-        return orderDetailsDto;
+        final var entity = createOrderEntity(orderDto, orderEntity);
+        final var details = putLists(entity);
+        details.setUserId(entity.getUserEntity().getId());
+        return details;
     }
 
     @Override
@@ -218,11 +209,11 @@ public class OrderServiceImpl implements OrderService {
 
         OrderEntity orderEntity = orderConverter.convertDtoToOrderEntity(orderDto);
 
-        orderEntity.setCreationDate(LocalDate.now());
-        log.info("creation date set");
-
         orderEntity.setSendingAddress(address);
         log.info("address set");
+
+        orderEntity.setCreationDate(LocalDate.now());
+        log.info("creation date set");
 
         orderEntity.setStatus(true);
         log.info("open status set to 'true'");
@@ -230,43 +221,7 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setSession(sessionEntity);
         log.info("set session on order");
 
-        List<OrderProductEntity> orderProductEntityList = orderDto.getProductDtos().stream()
-                .map(this::createOrderProduct)
-                .collect(Collectors.toList());
-        log.info("Created orderProductEntity list");
-
-        orderEntity.setOrderProductEntityList(orderProductEntityList);
-        log.info("set orderProductEntity list");
-
-        orderEntity.setTotalPrice(orderProductEntityList.stream()
-                .map(orderProductEntity -> orderProductEntity.getProduct().getPrice() * orderProductEntity.getQuantity())
-                .mapToDouble(Double::doubleValue)
-                .sum()
-        );
-        log.info("set total price to {} €", orderEntity.getTotalPrice());
-
-        final OrderEntity savedOrder = orderRepository.save(orderEntity);
-
-        log.info("Saved order to database with id {}", savedOrder.getId());
-
-        orderProductEntityList.forEach(orderProduct -> orderProduct.setOrderEntity(savedOrder));
-        orderProductRepository.saveAll(orderProductEntityList);
-
-        OrderDetailsDto orderDetailsDto = orderConverter.convertEntityToOrderDetailsDto(savedOrder);
-        orderDetailsDto.setAddressDetailsDto(addressConverter.convertEntityToAddressDetailsDto(savedOrder.getSendingAddress()));
-
-        final var orderProductDetails = savedOrder.getOrderProductEntityList().stream()
-                .map(orderProductEntity -> {
-                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
-                    if (orderProductEntity.getColor() != null)
-                        converted.setColorId(orderProductEntity.getColor().getId());
-                    converted.setOrderId(savedOrder.getId());
-                    return converted;
-                })
-                .collect(Collectors.toList());
-        orderDetailsDto.setOrderProductDetailsDtoList(orderProductDetails);
-        log.info("retrieving details of the order");
-        return orderDetailsDto;
+        return putLists(createOrderEntity(orderDto, orderEntity));
     }
 
     @Override
@@ -415,7 +370,6 @@ public class OrderServiceImpl implements OrderService {
         return orderConverter.convertEntityToOrderDetailsDto(savedOrder);
     }
 
-
     private OrderProductEntity createOrderProduct(CreateOrUpdateOrderProductDto orderProductDto) {
         OrderProductEntity orderProduct = orderProductConverter.convertDtoToOrderProductEntity(orderProductDto);
         log.info("orderProductDto converted to orderProductEntity");
@@ -439,6 +393,13 @@ public class OrderServiceImpl implements OrderService {
                         return new ColorNotFoundException(String.format(COLOR_NOT_FOUND, orderProductDto.getColorId()));
                     });
 
+            product.getColors().stream().filter(colorEntity -> colorEntity.getId().equals(orderProductDto.getColorId()))
+                    .findFirst()
+                    .orElseThrow(() -> {
+                        log.error(String.format(INVALID_COLOR_ID, orderProductDto.getColorId(), product.getId()));
+                        return new ColorNotFoundException(String.format(INVALID_COLOR_ID, orderProductDto.getColorId(), product.getId()));
+                    });
+
             orderProduct.setColor(color);
             log.info("OrderProduct color set to {}", color.getHexValue());
         }
@@ -448,4 +409,63 @@ public class OrderServiceImpl implements OrderService {
 
         return savedOrderProduct;
     }
+
+    private OrderDetailsDto putLists(OrderEntity orderEntity) {
+        OrderDetailsDto orderDetailsDto = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        orderDetailsDto.setAddressDetailsDto(addressConverter.convertEntityToAddressDetailsDto(orderEntity.getSendingAddress()));
+
+        final var orderProductDetails = orderEntity.getOrderProductEntityList().stream()
+                .map(orderProductEntity -> {
+                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
+                    if (orderProductEntity.getColor() != null)
+                        converted.setColorId(orderProductEntity.getColor().getId());
+                    converted.setOrderId(orderEntity.getId());
+                    return converted;
+                })
+                .collect(Collectors.toList());
+        orderDetailsDto.setOrderProductDetailsDtoList(orderProductDetails);
+        log.info("retrieving details of the order");
+        return orderDetailsDto;
+    }
+
+    private OrderEntity createOrderEntity(CreateOrUpdateOrderDto orderDto, OrderEntity orderEntity) {
+        List<OrderProductEntity> orderProductEntityList = orderDto.getProductDtos().stream()
+                .map(this::createOrderProduct)
+                .peek(orderProductRepository::save)
+                .collect(Collectors.toList());
+        log.info("Created orderProductEntity list");
+
+        orderEntity.setTotalPrice(orderProductEntityList.stream()
+                .map(orderProductEntity -> orderProductEntity.getProduct().getPrice() * orderProductEntity.getQuantity())
+                .mapToDouble(Double::doubleValue)
+                .sum());
+        log.info("set total price to {} €", orderEntity.getTotalPrice());
+
+        final OrderEntity savedOrder = orderRepository.save(orderEntity);
+        log.info("Saved order to database with id {}", savedOrder.getId());
+
+        List<OrderProductEntity> savedOrderProducts = orderProductEntityList.stream()
+                .map(orderProduct -> {
+                    OrderProductEntity updated = orderProductRepository.findById(orderProduct.getId())
+                            .orElseThrow(() ->
+                            {
+                                log.warn("order product with id {} does not exist", orderProduct.getId());
+                                throw new OrderProductNotFoundException(String.format(ORDER_PRODUCT_NOT_FOUND, orderProduct.getId()));
+                            });
+                    updated.setOrderEntity(savedOrder);
+                    log.info("set order entity on order product");
+                    final var temp = orderProductRepository.save(updated);
+                    log.info("saved order product with id {}", temp.getId());
+                    return temp;
+                })
+                .collect(Collectors.toList());
+
+        savedOrder.setOrderProductEntityList(savedOrderProducts);
+        log.info("set order product entity list on order");
+
+        final var updatedOrder = orderRepository.save(savedOrder);
+        log.info("got updated order from db");
+        return updatedOrder;
+    }
+
 }

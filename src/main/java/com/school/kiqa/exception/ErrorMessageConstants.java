@@ -34,6 +34,8 @@ public class ErrorMessageConstants {
     public static final String COLOR_NOT_FOUND_BY_ID = "Couldn't find color with id %s";
     public static final String COLOR_NOT_FOUND = "Couldn't find color with id %s";
 
+    public static final String INVALID_COLOR_ID = "Provided color id %s doesn't belong to product %s";
+
     // util
     public static final String INVALID_HEADER = "Given header doesn't match expected value. Session not created.";
     public static final String NO_RESULTS_FOUND = "No product matches given parameters";
