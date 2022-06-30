@@ -68,8 +68,9 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie
                 .from(COOKIE, loggedInUser.getToken())
-                .domain("kiqa.vercel.app")
-                .httpOnly(false)
+                .domain("https://kiqa.vercel.app/")
+                .path("/")
+                .httpOnly(true)
                 .sameSite("None")
                 .secure(true)
                 .maxAge(24 * 60 * 60)
