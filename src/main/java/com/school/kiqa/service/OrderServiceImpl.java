@@ -80,6 +80,16 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Retrieved order from database");
         final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        final var orderProductDetails = orderEntity.getOrderProductEntityList().stream()
+                .map(orderProductEntity -> {
+                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
+                    if (orderProductEntity.getColor() != null)
+                        converted.setColorId(orderProductEntity.getColor().getId());
+                    converted.setOrderId(orderEntity.getId());
+                    return converted;
+                })
+                .collect(Collectors.toList());
+        order.setOrderProductDetailsDtoList(orderProductDetails);
         log.info("Converted order to order details {}", order.getId());
         return order;
     }
@@ -98,13 +108,23 @@ public class OrderServiceImpl implements OrderService {
                     return new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
                 });
 
-        if (!Objects.equals(orderEntity.getUserEntity().getId(), sessionEntity.getId())) {
+        if (!Objects.equals(orderEntity.getSession().getId(), sessionEntity.getId())) {
             log.info(String.format(INVALID_ORDER_ID, orderId, sessionId));
             throw new OrderNotFoundException(String.format(INVALID_ORDER_ID, orderId, sessionId));
         }
 
         log.info("Retrieved order from database");
         final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        final var orderProductDetails = orderEntity.getOrderProductEntityList().stream()
+                .map(orderProductEntity -> {
+                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
+                    if (orderProductEntity.getColor() != null)
+                        converted.setColorId(orderProductEntity.getColor().getId());
+                    converted.setOrderId(orderEntity.getId());
+                    return converted;
+                })
+                .collect(Collectors.toList());
+        order.setOrderProductDetailsDtoList(orderProductDetails);
         log.info("Converted order to order details {}", order.getId());
         return order;
     }
