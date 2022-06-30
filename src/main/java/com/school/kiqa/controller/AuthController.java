@@ -104,6 +104,7 @@ public class AuthController {
 
         log.info("User logged out");
         return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ")
                 .header(HttpHeaders.SET_COOKIE, invalidateCookie.toString())
                 .build();
     }

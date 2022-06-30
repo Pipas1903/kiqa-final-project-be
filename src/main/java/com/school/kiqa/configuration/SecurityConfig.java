@@ -6,6 +6,7 @@ import com.school.kiqa.security.UserAuthenticationProvider;
 import com.school.kiqa.security.filters.CookieFilter;
 import com.school.kiqa.security.filters.JwtFilter;
 import com.school.kiqa.security.filters.SessionFilter;
+import com.school.kiqa.security.filters.SessionHeaderFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .addFilterBefore(new JwtFilter(authenticationProvider), BasicAuthenticationFilter.class)
+                .addFilterBefore(new SessionHeaderFilter(authenticationProvider), JwtFilter.class)
                 .addFilterBefore(new CookieFilter(authenticationProvider), JwtFilter.class)
                 .addFilterBefore(new SessionFilter(authenticationProvider), CookieFilter.class)
                 .csrf()
