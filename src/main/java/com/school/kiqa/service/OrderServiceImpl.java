@@ -90,6 +90,9 @@ public class OrderServiceImpl implements OrderService {
                 })
                 .collect(Collectors.toList());
         order.setOrderProductDetailsDtoList(orderProductDetails);
+        order.setAddressDetailsDto(addressConverter
+                .convertEntityToAddressDetailsDto(orderEntity.getSendingAddress()));
+
         log.info("Converted order to order details {}", order.getId());
         return order;
     }
@@ -125,6 +128,8 @@ public class OrderServiceImpl implements OrderService {
                 })
                 .collect(Collectors.toList());
         order.setOrderProductDetailsDtoList(orderProductDetails);
+        order.setAddressDetailsDto(addressConverter
+                .convertEntityToAddressDetailsDto(orderEntity.getSendingAddress()));
         log.info("Converted order to order details {}", order.getId());
         return order;
     }
@@ -193,6 +198,7 @@ public class OrderServiceImpl implements OrderService {
             address.setUserEntity(userEntity);
             addressRepository.save(address);
             log.info("saved new address for user with id {}", userEntity.getId());
+            orderEntity.setSendingAddress(address);
         }
 
         orderEntity.setCreationDate(LocalDate.now());
