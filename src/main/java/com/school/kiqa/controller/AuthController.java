@@ -68,7 +68,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie
                 .from(COOKIE, loggedInUser.getToken())
-                .domain("localhost:3000")
+                .domain("https://kiqa-be.herokuapp.com")
                 .httpOnly(true)
                 .sameSite("None")
                 .secure(true)
