@@ -68,11 +68,11 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie
                 .from(COOKIE, loggedInUser.getToken())
+                .path("/")
                 .httpOnly(true)
                 .sameSite("None")
                 .secure(true)
                 .maxAge(24 * 60 * 60)
-                .path("/")
                 .build();
         log.info("Set cookie");
 
@@ -104,6 +104,7 @@ public class AuthController {
 
         log.info("User logged out");
         return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ")
                 .header(HttpHeaders.SET_COOKIE, invalidateCookie.toString())
                 .build();
     }

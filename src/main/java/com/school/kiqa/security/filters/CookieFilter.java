@@ -48,6 +48,9 @@ public class CookieFilter extends OncePerRequestFilter {
                                 !otherCookie.getValue().isEmpty())
                         .findFirst();
                 Cookie invalidateCookie = new Cookie("x-session", null);
+                invalidateCookie.setMaxAge(0);
+                invalidateCookie.setSecure(false);
+                invalidateCookie.setHttpOnly(true);
                 sessionCookie.ifPresent(cookie1 -> response.addCookie(invalidateCookie));
 
                 log.info("invalidated session cookie");
