@@ -86,7 +86,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailsDto getOrderDetailsNoLogin(Long sessionId, Long orderId) {
-        return null;
+        SessionEntity sessionEntity = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> {
+                    log.warn(String.format(SESSION_NOT_FOUND, sessionId));
+                    throw new SessionNotFoundException(String.format(SESSION_NOT_FOUND, sessionId));
+                });
+
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.error(String.format(ORDER_NOT_FOUND, orderId));
+                    return new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
+                });
+
+        if (!Objects.equals(orderEntity.getUserEntity().getId(), sessionEntity.getId())) {
+            log.info(String.format(INVALID_ORDER_ID, orderId, sessionId));
+            throw new OrderNotFoundException(String.format(INVALID_ORDER_ID, orderId, sessionId));
+        }
+
+        log.info("Retrieved order from database");
+        final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        log.info("Converted order to order details {}", order.getId());
+        return order;
     }
 
     @Override
