@@ -68,7 +68,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie
                 .from(COOKIE, loggedInUser.getToken())
-                .domain("http://localhost:3000")
+                .domain("localhost:3000")
                 .httpOnly(true)
                 .sameSite("None")
                 .secure(true)
