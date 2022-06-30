@@ -46,6 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
+    @PreAuthorize("@authorized.isUser(#id)")
     public ResponseEntity<UserDetailsDto> getUserById(@PathVariable Long id) {
         log.info("Request received to get user with id {}", id);
         final var user = userService.getUserById(id);

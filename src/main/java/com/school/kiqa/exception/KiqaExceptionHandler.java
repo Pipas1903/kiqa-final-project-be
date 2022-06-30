@@ -118,4 +118,20 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Validation error list : " + validationList);
         return new ResponseEntity<>(error, status);
     }
+
+    @ExceptionHandler(
+            value = {
+                    IllegalArgumentException.class
+            }
+    )
+    public ResponseEntity<KiqaError> handleIllegalArgumentException(Exception ex, HttpServletRequest req) {
+        KiqaError error = KiqaError.builder()
+                .message(ex.getMessage())
+                .exception(ex.getClass().getSimpleName())
+                .path(req.getRequestURI())
+                .httpMethod(req.getMethod())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 }

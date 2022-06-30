@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.school.kiqa.exception.ErrorMessageConstants.EQUAL_PASSWORDS;
+import static com.school.kiqa.exception.ErrorMessageConstants.INVALID_NAME;
+import static com.school.kiqa.exception.ErrorMessageConstants.INVALID_PHONE_NUMBER;
+import static com.school.kiqa.exception.ErrorMessageConstants.INVALID_VAT;
 import static com.school.kiqa.exception.ErrorMessageConstants.PASSWORDS_DONT_MATCH;
 import static com.school.kiqa.exception.ErrorMessageConstants.USER_ALREADY_EXISTS;
 import static com.school.kiqa.exception.ErrorMessageConstants.USER_NOT_FOUND;
@@ -88,16 +91,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailsDto updateUserById(UpdateUserDto updateUserDto, Long id) {
-
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("user with id {} does not exist", id);
                     throw new UserNotFoundException(String.format(USER_NOT_FOUND, id));
                 });
 
-
         if (updateUserDto.getName() != null) {
             log.info("request received to update the name of the user with id {}", id);
+            if (updateUserDto.getName().length() < 1) {
+                log.error(INVALID_NAME);
+                throw new IllegalArgumentException(INVALID_NAME);
+            }
             userEntity.setName(updateUserDto.getName());
             log.info("name of the user with id {} was successfully updated", id);
         }
@@ -110,6 +115,11 @@ public class UserServiceImpl implements UserService {
 
         if (updateUserDto.getVat() != null) {
             log.info("request received to update the vat of the user with id {}", id);
+
+            if (updateUserDto.getVat() < 100000000) {
+                log.error(INVALID_VAT);
+                throw new IllegalArgumentException(INVALID_VAT);
+            }
             userEntity.setVat(updateUserDto.getVat());
             log.info("vat of the user with id {} was successfully updated", id);
         }
