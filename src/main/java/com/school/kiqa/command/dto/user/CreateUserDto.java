@@ -30,13 +30,12 @@ public class CreateUserDto {
     @Past
     private LocalDate dateOfBirth;
 
-    @NotBlank
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
             message = "password must have 8 characters with at least one capital letter, one lower case, one symbol and one number )")
     private String password;
 
 
-    @Min(100000000)
+    @Min(value = 100000000, message = "Invalid vat format")
     private Integer vat;
 
     private String phoneNumber;

@@ -82,7 +82,7 @@ public class ProductController {
 
     @PatchMapping("/products/{id}/deactivate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
-    public ResponseEntity<ProductDetailsDto> deactivateProduct(Long id, boolean activeProduct) {
+    public ResponseEntity<ProductDetailsDto> deactivateProduct(@PathVariable Long id, boolean activeProduct) {
         log.info("request received to deactivate product with id {}", id);
         final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
         log.info("deactivated product with id {} successfully", id);
@@ -91,7 +91,7 @@ public class ProductController {
 
     @PatchMapping("/products/{id}/activate")
     @PreAuthorize("@authorized.hasRole('ADMIN')")
-    public ResponseEntity<ProductDetailsDto> activateProduct(Long id, boolean activeProduct) {
+    public ResponseEntity<ProductDetailsDto> activateProduct(@PathVariable Long id, boolean activeProduct) {
         log.info("request received to activate product with id {}", id);
         final var changedProduct = productService.activateOrDeactivateProduct(id, activeProduct);
         log.info("activated product with id {} successfully", id);
