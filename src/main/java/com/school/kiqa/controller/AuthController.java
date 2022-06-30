@@ -68,9 +68,10 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie
                 .from(COOKIE, loggedInUser.getToken())
+                .domain("vercel.app")
                 .httpOnly(false)
                 .sameSite("None")
-                .secure(false)
+                .secure(true)
                 .maxAge(24 * 60 * 60)
                 .build();
         log.info("Set cookie");
