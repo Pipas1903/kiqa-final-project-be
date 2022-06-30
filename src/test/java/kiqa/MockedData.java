@@ -2,11 +2,18 @@ package kiqa;
 
 import com.school.kiqa.command.dto.address.AddressDetailsDto;
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
+import com.school.kiqa.command.dto.brand.BrandDetailsDto;
+import com.school.kiqa.command.dto.brand.CreateOrUpdateBrandDto;
+import com.school.kiqa.command.dto.category.CategoryDetailsDto;
+import com.school.kiqa.command.dto.category.CreateOrUpdateCategoryDto;
+import com.school.kiqa.command.dto.color.ColorDetailsDto;
+import com.school.kiqa.command.dto.color.CreateOrUpdateColorDto;
 import com.school.kiqa.command.dto.order.CreateOrUpdateOrderDto;
 import com.school.kiqa.command.dto.order.OrderDetailsDto;
 import com.school.kiqa.command.dto.orderProduct.CreateOrUpdateOrderProductDto;
 import com.school.kiqa.command.dto.orderProduct.OrderProductDetailsDto;
 import com.school.kiqa.command.dto.product.CreateOrUpdateProductDto;
+import com.school.kiqa.command.dto.product.ProductDetailsDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
@@ -34,7 +41,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
 
 public class MockedData {
 
@@ -141,7 +147,7 @@ public class MockedData {
                 .country("Portugal")
                 .isMain(true)
                 .userEntity(getMockedUserEntity())
-                .orders()
+                .orders(getOrderEntityList())
                 .build();
     }
 
@@ -231,7 +237,7 @@ public class MockedData {
 
     public static OrderProductDetailsDto getOrderProductDetailsDto(OrderProductEntity orderProductEntity) {
         return OrderProductDetailsDto.builder()
-                .id(orderProductEntity)
+                .id(orderProductEntity.getId())
                 .quantity(orderProductEntity.getQuantity())
                 .productId(getMockedProductEntity().getId())
                 .orderId(getMockedOrderEntity().getId())
@@ -253,7 +259,7 @@ public class MockedData {
                 .brandEntity(getMockedBrandEntity())
                 .productTypeEntity(getMockedProductTypeEntity())
                 .categoryEntity(getMockedCategoryEntity())
-                .colors()
+                .colors(getColorEntityList())
                 .build();
     }
 
@@ -271,18 +277,23 @@ public class MockedData {
                 .image("youwannaseeme")
                 .isActive(false)
                 .name("nexnopo")
-                .price(34)
-                .productTypeName()
+                .price(34D)
+                .productTypeName(getMockedProductTypeEntity().getName())
                 .build();
     }
 
-    public static OrderProductDetailsDto getOrderProductDetailsDto(OrderProductEntity orderProductEntity) {
-        return OrderProductDetailsDto.builder()
-                .id(orderProductEntity)
-                .quantity(orderProductEntity.getQuantity())
-                .productId(getMockedProductEntity().getId())
-                .orderId(getMockedOrderEntity().getId())
-                .colorId(getMockedColorEntity().getId())
+    public static ProductDetailsDto getProductDetailsDto(ProductEntity productEntity) {
+        return ProductDetailsDto.builder()
+                .id(productEntity.getId())
+                .price(productEntity.getPrice())
+                .description(productEntity.getDescription())
+                .brand(getMockedBrandEntity().getName())
+                .name(productEntity.getName())
+                .categoryName(getMockedCategoryEntity().getName())
+                .colors(Collections.singletonList(getColorDetailsDto(getMockedColorEntity())))
+                .image(productEntity.getImage())
+                .productTypeName(getMockedProductTypeEntity().getName())
+                .isActive(true)
                 .build();
     }
 
@@ -303,6 +314,22 @@ public class MockedData {
     }
 
 
+    public static CreateOrUpdateBrandDto getCreateOrUpdateBrandDto() {
+        return CreateOrUpdateBrandDto.builder()
+                .name("hahaha")
+                .imageLink("linkimage")
+                .build();
+    }
+
+    public static BrandDetailsDto getBrandDetailsDto(BrandEntity brandEntity) {
+        return BrandDetailsDto.builder()
+                .id(brandEntity.getId())
+                .name(brandEntity.getName())
+                .imageLink(brandEntity.getImageLink())
+                .build();
+    }
+
+
     // Product Type
 
     public static ProductTypeEntity getMockedProductTypeEntity() {
@@ -310,7 +337,7 @@ public class MockedData {
                 .id(6L)
                 .name("nevermind")
                 .productEntityList(Collections.singletonList(getMockedProductEntity()))
-                .category()
+                .category(getMockedCategoryEntity())
                 .build();
     }
 
@@ -335,6 +362,19 @@ public class MockedData {
     }
 
 
+    public static CreateOrUpdateCategoryDto getCreateOrUpdateCategoryDto() {
+        return CreateOrUpdateCategoryDto.builder()
+                .name("catecate")
+                .build();
+    }
+
+        public static CategoryDetailsDto getCategoryDetailsDto(CategoryEntity categoryEntity) {
+        return CategoryDetailsDto.builder()
+                .id(categoryEntity.getId())
+                .name(categoryEntity.getName())
+                .build();
+    }
+
     // COLOR
 
     public static ColorEntity getMockedColorEntity() {
@@ -343,7 +383,7 @@ public class MockedData {
                 .hexValue("#3456")
                 .colorName("blue")
                 .productEntityList(Collections.singletonList(getMockedProductEntity()))
-                .orderProductEntityList()
+                .orderProductEntityList(getOrderProductEntityList())
                 .build();
     }
 
@@ -351,4 +391,20 @@ public class MockedData {
         return Collections.singletonList(getMockedColorEntity());
     }
 
-} */
+
+    public static CreateOrUpdateColorDto getCreateOrUpdateColorDto() {
+        return CreateOrUpdateColorDto.builder()
+                .colourName("gray")
+                .hexValue("#594932")
+                .build();
+    }
+
+    public static ColorDetailsDto getColorDetailsDto(ColorEntity colorEntity) {
+        return ColorDetailsDto.builder()
+                .id(colorEntity.getId())
+                .colourName(colorEntity.getColorName())
+                .hexValue(colorEntity.getHexValue())
+                .build();
+    }
+
+}
