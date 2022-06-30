@@ -68,7 +68,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie
                 .from(COOKIE, loggedInUser.getToken())
-                .domain("https://kiqa.vercel.app/")
+                .domain("kiqa.vercel.app")
                 .path("/")
                 .httpOnly(true)
                 .sameSite("None")
