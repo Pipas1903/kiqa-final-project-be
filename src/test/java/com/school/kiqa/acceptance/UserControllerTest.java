@@ -44,9 +44,6 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @MockBean
-    private AuthController authController;
-
-    @MockBean
     private UserAuthenticationProvider userAuthenticationProvider;
 
     @MockBean
