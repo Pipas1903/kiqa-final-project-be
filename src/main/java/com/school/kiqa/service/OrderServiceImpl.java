@@ -61,7 +61,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailsDto getOrderDetails(Long userId, Long orderId) {
-
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.error(String.format(USER_NOT_FOUND, userId));
@@ -74,8 +73,15 @@ public class OrderServiceImpl implements OrderService {
                     return new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderId));
                 });
 
+        if (!Objects.equals(orderEntity.getUserEntity().getId(), userEntity.getId())) {
+            log.info(String.format(INVALID_ORDER_ID, orderId, userId));
+            throw new OrderNotFoundException(String.format(INVALID_ORDER_ID, orderId, userId));
+        }
 
-        return null;
+        log.info("Retrieved order from database");
+        final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        log.info("Converted order to order details {}", order.getId());
+        return order;
     }
 
     @Override

@@ -14,6 +14,8 @@ public class ErrorMessageConstants {
     public static final String INVALID_VAT = "Insert a valid VAT number";
     public static final String INVALID_PHONE_NUMBER = "Insert a valid phone number";
     public static final String INVALID_NAME = "Name is too small";
+    public static final String INVALID_ORDER_ID = "Provided order id %s doesn't belong to user with id %s";
+    public static final String INVALID_ORDER_ID_SESSION = "Provided order id %s doesn't belong to session with id %s";
 
     // brand
     public static final String BRAND_ALREADY_EXISTS = "Brand with name %s already exists";

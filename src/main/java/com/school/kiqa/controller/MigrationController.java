@@ -22,7 +22,7 @@ public class MigrationController {
         log.info("Received request to migrate products from MUA api to kiqa api");
         migrationAdapter.migrateApiToKiqaApi();
         log.info("returned products from api successfully");
-        return ResponseEntity.ok("Processing started");
+        return ResponseEntity.accepted().body("Processing started");
     }
 
     @GetMapping("/make-api-update-kiqa-product")
@@ -30,6 +30,6 @@ public class MigrationController {
     public ResponseEntity<String> updateProductImage() {
         log.info("Received request to update products from kiqa with MUA featured api image");
         migrationAdapter.updateProductImage();
-        return ResponseEntity.ok("Processing started");
+        return ResponseEntity.accepted().body("Processing started");
     }
 }

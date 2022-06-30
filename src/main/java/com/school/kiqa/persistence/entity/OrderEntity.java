@@ -70,5 +70,4 @@ public class OrderEntity {
     )
     @JoinColumn(name = "session_id")
     private SessionEntity session;
-
 }
