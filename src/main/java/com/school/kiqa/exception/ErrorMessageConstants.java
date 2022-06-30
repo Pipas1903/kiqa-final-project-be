@@ -11,6 +11,9 @@ public class ErrorMessageConstants {
     public static final String USER_DOESNT_HAVE_ADDRESS = "User doesn't have any addresses, please provide one before continuing";
     public static final String USER_ALREADY_EXISTS = "User with email %s already exists";
     public static final String USER_NOT_FOUND = "Couldn't find user with id %s";
+    public static final String INVALID_VAT = "Insert a valid VAT number";
+    public static final String INVALID_PHONE_NUMBER = "Insert a valid phone number";
+    public static final String INVALID_NAME = "Name is too small";
 
     // brand
     public static final String BRAND_ALREADY_EXISTS = "Brand with name %s already exists";
