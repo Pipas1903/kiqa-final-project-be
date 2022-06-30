@@ -60,7 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/products/related/*",
                         "/users/{id}",
                         "/colors",
-                        "/colors/*"
+                        "/colors/*",
+                        "/"
                 )
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/login", "/users", "/session")
