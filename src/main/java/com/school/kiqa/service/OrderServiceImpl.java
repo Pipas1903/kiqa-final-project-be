@@ -80,6 +80,19 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Retrieved order from database");
         final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        final var orderProductDetails = orderEntity.getOrderProductEntityList().stream()
+                .map(orderProductEntity -> {
+                    final var converted = orderProductConverter.convertEntityToOrderProductDetailsDto(orderProductEntity);
+                    if (orderProductEntity.getColor() != null)
+                        converted.setColorId(orderProductEntity.getColor().getId());
+                    converted.setOrderId(orderEntity.getId());
+                    return converted;
+                })
+                .collect(Collectors.toList());
+        order.setOrderProductDetailsDtoList(orderProductDetails);
+        order.setAddressDetailsDto(addressConverter
+                .convertEntityToAddressDetailsDto(orderEntity.getSendingAddress()));
+
         log.info("Converted order to order details {}", order.getId());
         return order;
     }
@@ -104,13 +117,16 @@ public class OrderServiceImpl implements OrderService {
         }
 
         log.info("Retrieved order from database");
-        final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        final var order = putLists(orderEntity);
         log.info("Converted order to order details {}", order.getId());
         return order;
     }
 
     @Override
-    public OrderDetailsDto addProductToOrder(CreateOrUpdateOrderProductDto orderProductDto, Long orderId, Long userId) {
+    public OrderDetailsDto addProductToOrder(
+            CreateOrUpdateOrderProductDto orderProductDto,
+            Long orderId,
+            Long userId) {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> {
                     log.error(String.format(ORDER_NOT_FOUND, orderId));
@@ -174,6 +190,7 @@ public class OrderServiceImpl implements OrderService {
             addressRepository.save(address);
             orderEntity.setSendingAddress(address);
             log.info("saved new address for user with id {}", userEntity.getId());
+            orderEntity.setSendingAddress(address);
         }
 
         orderEntity.setUserEntity(userEntity);

@@ -16,6 +16,7 @@ public class OrderProductConverter {
 
     public OrderProductDetailsDto convertEntityToOrderProductDetailsDto(OrderProductEntity entity) {
         return OrderProductDetailsDto.builder()
+                .id(entity.getId())
                 .productId(entity.getProduct().getId())
                 .quantity(entity.getQuantity())
                 .orderId(entity.getOrderEntity().getId())
