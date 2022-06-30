@@ -45,7 +45,7 @@ public class ProductEntity {
     private String name;
 
     @Column(nullable = false)
-    private Boolean isActive;
+    private boolean isActive;
 
     @Column(nullable = false,
             length = 3000)

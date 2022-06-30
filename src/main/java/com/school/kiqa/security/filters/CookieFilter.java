@@ -3,6 +3,7 @@ package com.school.kiqa.security.filters;
 import com.school.kiqa.security.UserAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,9 +38,19 @@ public class CookieFilter extends OncePerRequestFilter {
 
         try {
             authCookie.ifPresent(cookie -> {
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authenticationProvider.validateToken(cookie.getValue()));
+                final var authentication = authenticationProvider.validateToken(cookie.getValue());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("Authenticated with auth cookie");
+                Optional<Cookie> sessionCookie = Stream.of(Optional.ofNullable(request.getCookies())
+                                .orElse(new Cookie[0]))
+                        .filter(otherCookie -> "x-session".equals(otherCookie.getName()) &&
+                                Objects.nonNull(otherCookie.getValue()) &&
+                                !otherCookie.getValue().isEmpty())
+                        .findFirst();
+                Cookie invalidateCookie = new Cookie("x-session", null);
+                sessionCookie.ifPresent(cookie1 -> response.addCookie(invalidateCookie));
+
+                log.info("invalidated session cookie");
             });
 
         } catch (RuntimeException e) {

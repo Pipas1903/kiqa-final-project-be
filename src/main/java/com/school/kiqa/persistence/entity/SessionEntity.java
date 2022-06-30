@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.List;
 
 //TODO: criar esta tabela e coisas necessárias para gerir sessões
@@ -34,6 +35,9 @@ public class SessionEntity {
 
     @Column(nullable = false)
     private String tokenUuid;
+
+    @Column(nullable = false)
+    private LocalDate creationDate;
 
     @OneToMany(
             mappedBy = "session",

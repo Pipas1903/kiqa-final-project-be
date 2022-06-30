@@ -60,7 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/users/{id}",
                         "/colors",
                         "/colors/*"
-
                 )
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/login", "/users", "/session")
@@ -82,10 +81,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH"));
-        //configuration.setAllowedOrigins(List.of("https://kiqa.vercel.app"));
+        configuration.setAllowedOrigins(List.of("https://kiqa.vercel.app", "http://localhost:3000"));
         configuration.addAllowedHeader("*");
-         configuration.addAllowedOrigin("*");
-        //configuration.setAllowCredentials(true);
+        //configuration.addAllowedOrigin("*");
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

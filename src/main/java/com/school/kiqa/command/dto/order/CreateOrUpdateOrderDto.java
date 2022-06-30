@@ -28,4 +28,5 @@ public class CreateOrUpdateOrderDto {
     private Long userId;
     private List<CreateOrUpdateOrderProductDto> productDtos;
     private CreateOrUpdateAddressDto addressDto;
+    private Long addressId;
 }

@@ -194,7 +194,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailsDto activateProduct(ProductEntity productEntity, Long id) {
-        productEntity.setIsActive(true);
+        productEntity.setActive(true);
         final var savedItem = productRepository.save(productEntity);
         log.info("product with id {} was successfully activated", id);
 
@@ -210,7 +210,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailsDto deactivateProduct(ProductEntity productEntity, Long id) {
-        productEntity.setIsActive(false);
+        productEntity.setActive(false);
         final var savedItem = productRepository.save(productEntity);
         log.info("product with id {} was successfully deactivated", id);
 

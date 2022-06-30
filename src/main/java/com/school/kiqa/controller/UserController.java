@@ -1,6 +1,7 @@
 package com.school.kiqa.controller;
 
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
+import com.school.kiqa.command.dto.user.ChangePasswordDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
 import com.school.kiqa.command.dto.user.UserDetailsDto;
@@ -10,7 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,7 +29,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity<UserDetailsDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<UserDetailsDto> createUser(@RequestBody @Valid CreateUserDto createUserDto) {
         log.info("Request received to create user with role {}", UserType.USER);
         final var user = userService.createUser(createUserDto, UserType.USER);
         log.info("Returning created user");
@@ -47,21 +54,37 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    @PreAuthorize("@authorized.isUser(id)")
-    public ResponseEntity<UserDetailsDto> updateUserById(@PathVariable Long id,
-                                                         @RequestBody UpdateUserDto updateUserDto) {
+    @PreAuthorize("@authorized.isUser(#id)")
+    public ResponseEntity<UserDetailsDto> updateUserById(
+            @PathVariable Long id,
+            @RequestBody UpdateUserDto updateUserDto) {
         log.info("Request received to update user with id {}", id);
         final var user = userService.updateUserById(updateUserDto, id);
         log.info("Returned updated user with id {}", id);
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/users/{id}/address")
-    @PreAuthorize("@authorized.isUser(id)")
-    public ResponseEntity<UserDetailsDto> addAddress(@RequestBody CreateOrUpdateAddressDto addressDto, @PathVariable Long userId) {
+    @PostMapping("/users/{userId}/address")
+    @PreAuthorize("@authorized.isUser(#userId)")
+    public ResponseEntity<UserDetailsDto> addAddress(
+            @RequestBody CreateOrUpdateAddressDto addressDto,
+            @PathVariable Long userId
+    ) {
         log.info("Request received to add address {} to the user with id {}", addressDto, userId);
         final var user = userService.addAddress(addressDto, userId);
         log.info("Returning user with an added address");
         return ResponseEntity.ok(user);
     }
+
+    @PatchMapping("/users/{userId}/password")
+    @PreAuthorize("@authorized.isUser(#userId)")
+    public ResponseEntity<UserDetailsDto> updatePassword(
+            @RequestBody ChangePasswordDto changePasswordDto,
+            @PathVariable Long userId) {
+        log.info("Request received to change password of user with id {}", userId);
+        final var user = userService.updatePassword(changePasswordDto, userId);
+        log.info("Returning user");
+        return ResponseEntity.ok(user);
+    }
+
 }

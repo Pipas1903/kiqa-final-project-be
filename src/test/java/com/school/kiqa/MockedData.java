@@ -1,4 +1,4 @@
-package kiqa;
+package com.school.kiqa;
 
 import com.school.kiqa.command.dto.address.AddressDetailsDto;
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
@@ -70,8 +70,6 @@ public class MockedData {
                 .vat(674565)
                 .phoneNumber("4567888")
                 .userType(UserType.USER)
-                .addressEntities(getAddressEntityList())
-                .orderEntityList(getOrderEntityList())
                 .build();
     }
 
@@ -96,15 +94,13 @@ public class MockedData {
                 .dateOfBirth(LocalDate.of(2000, 8, 30))
                 .vat(2222)
                 .phoneNumber("912456789")
-                .mainAddress(getCreateOrUpdateAddressDto())
                 .build();
     }
 
-
+/**
     public static UpdateUserDto getUpdateUserDto() {
         return UpdateUserDto.builder()
                 .name("ricas")
-                .password("jeriewi339")
                 .dateOfBirth(LocalDate.of(1990, 12, 3))
                 .vat(2222)
                 .phoneNumber("12345949")
@@ -146,8 +142,8 @@ public class MockedData {
                 .cityName("Minime")
                 .country("Portugal")
                 .isMain(true)
-                .userEntity(getMockedUserEntity())
-                .orders(getOrderEntityList())
+                //.userEntity(getMockedUserEntity())
+                //.orders(getOrderEntityList())
                 .build();
     }
 
@@ -162,7 +158,7 @@ public class MockedData {
                 .country(addressEntity.getCountry())
                 .doorNumber(addressEntity.getDoorNumber())
                 .floorNumber(addressEntity.getFloorNumber())
-                .streetName(addressEntity.getStreetName())
+                .street(addressEntity.getStreetName())
                 .zipCode(addressEntity.getZipCode())
                 .isMain(addressEntity.getIsMain())
                 .build();
@@ -406,5 +402,5 @@ public class MockedData {
                 .hexValue(colorEntity.getHexValue())
                 .build();
     }
-
+*/
 }

@@ -3,7 +3,7 @@ package com.school.kiqa.service;
 import com.school.kiqa.command.dto.auth.CredentialsDto;
 import com.school.kiqa.command.dto.auth.LoginDto;
 import com.school.kiqa.command.dto.auth.PrincipalDto;
-import com.school.kiqa.exception.WrongCredentialsException;
+import com.school.kiqa.exception.authExceptions.WrongCredentialsException;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.UserRepository;
 import com.school.kiqa.util.JwtService;

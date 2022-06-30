@@ -28,7 +28,7 @@ public class ProductConverter {
                 .brand(product.getBrandEntity().getName())
                 .description(product.getDescription())
                 .image(product.getImage())
-                .isActive(product.getIsActive())
+                .isActive(product.isActive())
                 .categoryName(product.getCategoryEntity().getName())
                 .productTypeName(product.getProductTypeEntity().getName())
                 .price(product.getPrice())

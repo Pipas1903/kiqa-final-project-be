@@ -6,18 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CredentialsDto {
-
-    private String email;
-
-    @NotNull
-    private String password;
+public class SessionDetailsDto {
+    private Long id;
+    private String uuid;
 }

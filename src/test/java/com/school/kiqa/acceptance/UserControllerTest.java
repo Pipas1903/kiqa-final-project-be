@@ -1,4 +1,4 @@
-package kiqa.acceptance;
+package com.school.kiqa.acceptance;
 
 import com.school.kiqa.command.dto.user.UserDetailsDto;
 import com.school.kiqa.persistence.entity.UserEntity;
@@ -13,15 +13,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.junit.Before;
 
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
-import static kiqa.MockedData.getMockedUserEntity;
-import static kiqa.MockedData.getUserDetailsDto;
-import static kiqa.MockedData.getCreateUserDto;
+import static com.school.kiqa.MockedData.getMockedUserEntity;
+import static com.school.kiqa.MockedData.getUserDetailsDto;
+import static com.school.kiqa.MockedData.getCreateUserDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -31,6 +32,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @LocalServerPort
     private int port;

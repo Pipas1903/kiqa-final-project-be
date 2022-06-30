@@ -3,6 +3,7 @@ package com.school.kiqa.controller;
 import com.school.kiqa.command.dto.auth.CredentialsDto;
 import com.school.kiqa.command.dto.auth.LoginDto;
 import com.school.kiqa.command.dto.auth.PrincipalDto;
+import com.school.kiqa.command.dto.auth.SessionDetailsDto;
 import com.school.kiqa.service.AuthService;
 import com.school.kiqa.util.UuidService;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +31,12 @@ public class AuthController {
     private final String SESSION_COOKIE = "x-session";
 
     @PostMapping("/session")
-    public ResponseEntity<Void> createSession(@RequestHeader(value = "identifier") String identifier) {
+    public ResponseEntity<SessionDetailsDto> createSession(@RequestHeader(value = "identifier") String identifier) {
         log.info("Received request to create session");
-        final var session = uuidService.generateUuid(identifier);
+        final var session = uuidService.createSession(uuidService.generateUuid(identifier));
 
         ResponseCookie cookie = ResponseCookie
-                .from(SESSION_COOKIE, session)
+                .from(SESSION_COOKIE, session.getTokenUuid())
                 .httpOnly(true)
                 .sameSite("None")
                 .secure(true)
@@ -46,9 +47,15 @@ public class AuthController {
 
         log.info("User without login has now a session");
 
+
+        final SessionDetailsDto sessionDetails = SessionDetailsDto.builder()
+                .uuid(session.getTokenUuid())
+                .id(session.getId())
+                .build();
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .build();
+                .body(sessionDetails);
     }
 
     @PostMapping("/login")

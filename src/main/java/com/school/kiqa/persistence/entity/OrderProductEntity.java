@@ -50,7 +50,7 @@ public class OrderProductEntity {
     private ColorEntity color;
 
     @Column
-    private Boolean isActive;
+    private boolean isActive;
 
     @ManyToOne(
             cascade = CascadeType.ALL,
