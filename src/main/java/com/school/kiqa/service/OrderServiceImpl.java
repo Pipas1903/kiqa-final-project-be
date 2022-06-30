@@ -135,7 +135,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDetailsDto addProductToOrder(CreateOrUpdateOrderProductDto orderProductDto, Long orderId, Long userId) {
+    public OrderDetailsDto addProductToOrder(
+            CreateOrUpdateOrderProductDto orderProductDto,
+            Long orderId,
+            Long userId) {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> {
                     log.error(String.format(ORDER_NOT_FOUND, orderId));
