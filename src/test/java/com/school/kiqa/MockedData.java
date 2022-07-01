@@ -278,14 +278,15 @@ public class MockedData {
                 .brand(getMockedBrandEntity().getName())
                 .categoryName(getMockedCategoryEntity().getName())
                 .colors(Collections.singletonList(getCreateOrUpdateColorDto()))
-                .description("I dont know")
-                .image("youwannaseeme")
-                .isActive(false)
-                .name("nexnopo")
-                .price(34D)
+                .description("abcd")
+                .image("imagemDoJoao")
+                .isActive(true)
+                .name("nunca vi")
+                .price(30D)
                 .productTypeName(getMockedProductTypeEntity().getName())
                 .build();
     }
+
 
     public static ProductDetailsDto getProductDetailsDto(ProductEntity productEntity) {
         return ProductDetailsDto.builder()
@@ -295,7 +296,7 @@ public class MockedData {
                 .brand(getMockedBrandEntity().getName())
                 .name(productEntity.getName())
                 .categoryName(getMockedCategoryEntity().getName())
-                .colors(Collections.singletonList(getColorDetailsDto(getMockedColorEntity())))
+                .colors(getColorEntityList().stream().map(colorConverter::convertEntityToColorDetailsDto).collect(Collectors.toList()))
                 .image(productEntity.getImage())
                 .productTypeName(getMockedProductTypeEntity().getName())
                 .isActive(true)

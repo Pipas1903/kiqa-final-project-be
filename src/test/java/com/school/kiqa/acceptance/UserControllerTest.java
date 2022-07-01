@@ -91,7 +91,7 @@ public class UserControllerTest {
     }
 
 
-    @Nested
+  /*  @Nested
     class GetAllUsers {
         @Test
         void test_getAllUsers_shouldReturn200() {
@@ -135,7 +135,7 @@ public class UserControllerTest {
     }
 
 
-   /* @Test
+    @Test
     void test_getUserById_shouldReturn200() {
         // GIVEN
         UserEntity entity = getMockedUserEntity();
