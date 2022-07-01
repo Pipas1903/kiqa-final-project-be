@@ -447,7 +447,7 @@ public class OrderServiceImpl implements OrderService {
 
         double sum = 0;
         for (OrderProductEntity entity : orderProductEntityList) {
-            sum = entity.getProduct().getPrice() * entity.getQuantity();
+            sum = sum + entity.getProduct().getPrice() * entity.getQuantity();
         }
         orderEntity.setTotalPrice(sum);
         log.info("set total price to {} €", orderEntity.getTotalPrice());
