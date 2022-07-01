@@ -67,7 +67,7 @@ public class WelcomeController {
                 "<h3>Our beloved backenders</h3>\n" +
                 "<div class=\"photos\">\n" +
                 "    <div class=\"identify\">\n" +
-                "        <img src=\"https://media.discordapp.net/attachments/890702053234589696/992217691521830992/20220607_233603_1.jpg?width=658&height=966\"\n" +
+                "        <img src=\"https://media.discordapp.net/attachments/890702053234589696/992221763557666836/working.jpeg?width=612&height=967\"\n" +
                 "             alt=\"Flepa\">\n" +
                 "        <p class=\"names\">Flepa</p>\n" +
                 "    </div>\n" +
