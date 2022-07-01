@@ -29,5 +29,4 @@ public class EmailService {
 
         javaMailSender.send(mimeMessage);
     }
-
 }
