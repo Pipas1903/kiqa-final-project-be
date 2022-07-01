@@ -444,10 +444,12 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
         log.info("Created orderProductEntity list");
 
-        orderEntity.setTotalPrice(orderProductEntityList.stream()
-                .map(orderProductEntity -> orderProductEntity.getProduct().getPrice() * orderProductEntity.getQuantity())
-                .mapToDouble(Double::doubleValue)
-                .sum());
+
+        double sum = 0;
+        for (OrderProductEntity entity : orderProductEntityList) {
+            sum = entity.getProduct().getPrice() * entity.getQuantity();
+        }
+        orderEntity.setTotalPrice(sum);
         log.info("set total price to {} €", orderEntity.getTotalPrice());
 
         final OrderEntity savedOrder = orderRepository.save(orderEntity);
