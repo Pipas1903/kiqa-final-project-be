@@ -6,18 +6,26 @@ import com.school.kiqa.command.dto.orderProduct.CreateOrUpdateOrderProductDto;
 
 public interface OrderService {
 
-    OrderDetailsDto addProductToOrder(CreateOrUpdateOrderProductDto orderProductDto, Long orderId);
+    OrderDetailsDto getOrderDetails(Long userId, Long orderId);
 
-    OrderDetailsDto createOrder(CreateOrUpdateOrderDto orderDto);
+    OrderDetailsDto getOrderDetailsNoLogin(Long sessionId, Long orderId);
 
-    OrderDetailsDto updateProductQuantity(Long orderProductId, Long orderId, int quantity);
+    OrderDetailsDto addProductToOrder(CreateOrUpdateOrderProductDto orderProductDto, Long orderId, Long userId);
 
-    OrderDetailsDto removeProductFromOrder(Long orderProductId, Long orderId);
+    OrderDetailsDto createOrder(CreateOrUpdateOrderDto orderDto, Long userId);
 
-    OrderDetailsDto incrementProductQuantity(Long orderProductId, Long orderId);
+    OrderDetailsDto createOrderNoLogin(CreateOrUpdateOrderDto orderDto, Long sessionId);
+
+    OrderDetailsDto finishOrderNoLogin(Long orderId, Long sessionId);
+
+    OrderDetailsDto updateProductQuantity(Long orderProductId, Long orderId, int quantity, Long userId);
+
+    OrderDetailsDto removeProductFromOrder(Long orderProductId, Long orderId, Long userId);
+
+    OrderDetailsDto incrementProductQuantity(Long orderProductId, Long orderId, Long userId);
 
     // order/{}/decrement/{}
-    OrderDetailsDto decrementProductQuantity(Long orderProductId, Long orderId);
+    OrderDetailsDto decrementProductQuantity(Long orderProductId, Long orderId, Long userId);
 
-    OrderDetailsDto finishOrder(Long orderId);
+    OrderDetailsDto finishOrder(Long orderId, Long userId);
 }

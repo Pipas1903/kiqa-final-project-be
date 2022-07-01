@@ -5,18 +5,16 @@ import com.school.kiqa.security.UserAuthenticationEntryPoint;
 import com.school.kiqa.security.UserAuthenticationProvider;
 import com.school.kiqa.security.filters.CookieFilter;
 import com.school.kiqa.security.filters.JwtFilter;
+import com.school.kiqa.security.filters.SessionFilter;
+import com.school.kiqa.security.filters.SessionHeaderFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,8 +22,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @RequiredArgsConstructor
@@ -41,7 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .addFilterBefore(new JwtFilter(authenticationProvider), BasicAuthenticationFilter.class)
+                .addFilterBefore(new SessionHeaderFilter(authenticationProvider), JwtFilter.class)
                 .addFilterBefore(new CookieFilter(authenticationProvider), JwtFilter.class)
+                .addFilterBefore(new SessionFilter(authenticationProvider), CookieFilter.class)
                 .csrf()
                 .disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -53,15 +51,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/products",
                         "/products/*",
                         "/categories",
+                        "/categories/*",
                         "/brands",
                         "/brands/*",
                         "/products/search/*",
                         "/products/search",
                         "/products/related",
-                        "/products/related/*"
+                        "/products/related/*",
+                        "/users/{id}",
+                        "/colors",
+                        "/colors/*",
+                        "/"
                 )
                 .permitAll()
-                .antMatchers(HttpMethod.POST, "/login", "/users")
+                .antMatchers(HttpMethod.POST, "/login", "/users", "/session")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -70,23 +73,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
     }
 
-
     @Bean
     public AuthorizationValidator authorized() {
         return new AuthorizationValidator();
     }
 
-
     //TODO: Research about this
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("*");
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH"));
+        configuration.setAllowedOrigins(List.of("https://kiqa.vercel.app", "http://localhost:3000"));
         configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }

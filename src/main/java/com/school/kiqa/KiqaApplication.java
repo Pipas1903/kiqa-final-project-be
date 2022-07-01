@@ -16,5 +16,4 @@ public class KiqaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(KiqaApplication.class, args);
 	}
-
 }

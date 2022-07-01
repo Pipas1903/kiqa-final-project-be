@@ -1,13 +1,21 @@
 package com.school.kiqa.exception;
 
 import com.school.kiqa.exception.alreadyExists.AlreadyExistsException;
+import com.school.kiqa.exception.alreadyExists.ColorAlreadyExistsException;
+import com.school.kiqa.exception.alreadyExists.PasswordMismatchException;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
+import com.school.kiqa.exception.authExceptions.InvalidHeaderException;
+import com.school.kiqa.exception.authExceptions.WrongCredentialsException;
+import com.school.kiqa.exception.notFound.AddressNotFound;
 import com.school.kiqa.exception.notFound.BrandNotFoundException;
 import com.school.kiqa.exception.notFound.CategoryNotFoundException;
 import com.school.kiqa.exception.notFound.ColorNotFoundException;
+import com.school.kiqa.exception.notFound.OrderNotFoundException;
+import com.school.kiqa.exception.notFound.OrderProductNotFoundException;
 import com.school.kiqa.exception.notFound.ProductNotFoundException;
 import com.school.kiqa.exception.notFound.ProductTypeNotFoundException;
 import com.school.kiqa.exception.notFound.ResultsNotFoundException;
+import com.school.kiqa.exception.notFound.SessionNotFoundException;
 import com.school.kiqa.exception.notFound.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -21,7 +29,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +45,11 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
                     BrandNotFoundException.class,
                     ProductTypeNotFoundException.class,
                     UserNotFoundException.class,
-                    ResultsNotFoundException.class
+                    ResultsNotFoundException.class,
+                    OrderNotFoundException.class,
+                    OrderProductNotFoundException.class,
+                    SessionNotFoundException.class,
+                    AddressNotFound.class
             }
     )
     public ResponseEntity<KiqaError> handleNotFoundException(Exception ex, HttpServletRequest req) {
@@ -52,7 +63,14 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {AlreadyExistsException.class, UserAlreadyExistsException.class})
+    @ExceptionHandler(
+            value = {
+                    AlreadyExistsException.class,
+                    ColorAlreadyExistsException.class,
+                    UserAlreadyExistsException.class,
+                    PasswordMismatchException.class
+            }
+    )
     public ResponseEntity<KiqaError> handleAlreadyExistsException(Exception ex, HttpServletRequest req) {
         KiqaError error = KiqaError.builder()
                 .message(ex.getMessage())
@@ -64,7 +82,12 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(value = {WrongCredentialsException.class})
+    @ExceptionHandler(
+            value = {
+                    WrongCredentialsException.class,
+                    InvalidHeaderException.class
+            }
+    )
     public ResponseEntity<KiqaError> handleWrongCredentialsException(Exception ex, HttpServletRequest req) {
         KiqaError error = KiqaError.builder()
                 .message(ex.getMessage())
@@ -89,11 +112,26 @@ public class KiqaExceptionHandler extends ResponseEntityExceptionHandler {
         ValidationError error = ValidationError.builder()
                 .failedValidationsList(validationList)
                 .exception(ex.getClass().getSimpleName())
-                .message(ex.getMessage())
                 .path(((ServletWebRequest) request).getRequest().getRequestURI())
                 .build();
 
         log.error("Validation error list : " + validationList);
         return new ResponseEntity<>(error, status);
+    }
+
+    @ExceptionHandler(
+            value = {
+                    IllegalArgumentException.class
+            }
+    )
+    public ResponseEntity<KiqaError> handleIllegalArgumentException(Exception ex, HttpServletRequest req) {
+        KiqaError error = KiqaError.builder()
+                .message(ex.getMessage())
+                .exception(ex.getClass().getSimpleName())
+                .path(req.getRequestURI())
+                .httpMethod(req.getMethod())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }

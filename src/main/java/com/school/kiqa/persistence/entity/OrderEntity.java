@@ -64,4 +64,10 @@ public class OrderEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity sendingAddress;
 
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "session_id")
+    private SessionEntity session;
 }
