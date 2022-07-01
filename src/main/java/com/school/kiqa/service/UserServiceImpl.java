@@ -13,15 +13,20 @@ import com.school.kiqa.exception.alreadyExists.PasswordMismatchException;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
 import com.school.kiqa.exception.notFound.UserNotFoundException;
 import com.school.kiqa.persistence.entity.AddressEntity;
+import com.school.kiqa.persistence.entity.EmailMessage;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.AddressRepository;
 import com.school.kiqa.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +49,8 @@ public class UserServiceImpl implements UserService {
     private final UserConverter userConverter;
     private final AddressConverter addressConverter;
     private final OrderConverter orderConverter;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public UserDetailsDto createUser(CreateUserDto dto, UserType userType) {
@@ -66,6 +73,15 @@ public class UserServiceImpl implements UserService {
         final var savedUser = userRepository.save(user);
         log.info("Saved new user with id {} to database", savedUser.getId());
 
+        EmailMessage emailMessage = new EmailMessage("Welcome", "Welcome to our Website!!!" +
+                "\nHere you can buy many makeup products from several categories and with an accessible price." +
+                "\nI hope you enjoy this fantastic journey!", "nunoneto2015@gmail.com", List.of(savedUser.getEmail()));
+
+        try {
+            emailService.send(emailMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return userConverter.convertEntityToUserDetailsDto(savedUser);
     }
 
