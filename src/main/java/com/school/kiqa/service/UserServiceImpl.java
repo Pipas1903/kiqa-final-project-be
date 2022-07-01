@@ -1,6 +1,8 @@
 package com.school.kiqa.service;
 
 import com.school.kiqa.command.dto.address.CreateOrUpdateAddressDto;
+import com.school.kiqa.command.dto.order.OrderDetailsDto;
+import com.school.kiqa.command.dto.orderProduct.OrderProductDetailsDto;
 import com.school.kiqa.command.dto.user.ChangePasswordDto;
 import com.school.kiqa.command.dto.user.CreateUserDto;
 import com.school.kiqa.command.dto.user.UpdateUserDto;
@@ -13,6 +15,8 @@ import com.school.kiqa.exception.alreadyExists.PasswordMismatchException;
 import com.school.kiqa.exception.alreadyExists.UserAlreadyExistsException;
 import com.school.kiqa.exception.notFound.UserNotFoundException;
 import com.school.kiqa.persistence.entity.AddressEntity;
+import com.school.kiqa.persistence.entity.OrderEntity;
+import com.school.kiqa.persistence.entity.OrderProductEntity;
 import com.school.kiqa.persistence.entity.UserEntity;
 import com.school.kiqa.persistence.repository.AddressRepository;
 import com.school.kiqa.persistence.repository.UserRepository;
@@ -209,9 +213,18 @@ public class UserServiceImpl implements UserService {
 
         if (!savedUser.getOrderEntityList().isEmpty())
             convertedUser.setOrderHistory(savedUser.getOrderEntityList().stream()
-                    .map(orderConverter::convertEntityToOrderDetailsDto)
+                    .map(this::makeDetails)
                     .collect(Collectors.toList()));
         return convertedUser;
+    }
+
+    private OrderDetailsDto makeDetails(OrderEntity orderEntity) {
+        final var order = orderConverter.convertEntityToOrderDetailsDto(orderEntity);
+        order.setTotalQuantity(orderEntity.getOrderProductEntityList().stream()
+                .map(OrderProductEntity::getQuantity)
+                .mapToInt(Integer::intValue)
+                .sum());
+        return order;
     }
 
 }

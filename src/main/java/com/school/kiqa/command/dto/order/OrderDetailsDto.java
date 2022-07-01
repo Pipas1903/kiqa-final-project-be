@@ -30,6 +30,7 @@ public class OrderDetailsDto {
     private Boolean status;
     private LocalDate creationDate;
     private List<OrderProductDetailsDto> orderProductDetailsDtoList;
+    private int totalQuantity;
     private Long userId;
     private AddressDetailsDto addressDetailsDto;
 }
